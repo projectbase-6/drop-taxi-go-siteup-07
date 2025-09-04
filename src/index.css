@@ -1,0 +1,496 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 60% 98%;
+    --foreground: 210 30% 15%;
+
+    --card: 220 60% 98%;
+    --card-foreground: 210 30% 15%;
+
+    --popover: 220 60% 98%;
+    --popover-foreground: 210 30% 15%;
+
+    --primary: 210 85% 58%;
+    --primary-foreground: 220 60% 98%;
+
+    --secondary: 220 50% 95%;
+    --secondary-foreground: 210 30% 15%;
+
+    --muted: 220 50% 95%;
+    --muted-foreground: 210 30% 45%;
+
+    --accent: 24 100% 58%;
+    --accent-foreground: 220 60% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 50% 90%;
+    --input: 220 50% 95%;
+    --ring: 210 85% 58%;
+
+    --radius: 0.75rem;
+
+    /* Taxi Service Blue Theme */
+    --taxi-blue: 210 85% 58%;
+    --taxi-blue-dark: 210 85% 42%;
+    --taxi-blue-light: 220 60% 95%;
+    --taxi-orange: 24 100% 58%;
+    --taxi-orange-dark: 24 100% 48%;
+    --taxi-green: 142 71% 45%;
+    --taxi-purple: 262 83% 58%;
+
+    /* Hero Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(210 85% 58%), hsl(210 85% 42%));
+    --gradient-orange: linear-gradient(135deg, hsl(24 100% 58%), hsl(24 100% 48%));
+    --gradient-light: linear-gradient(135deg, hsl(220 60% 98%), hsl(220 50% 95%));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 6px -1px hsl(210 30% 70% / 0.1), 0 2px 4px -1px hsl(210 30% 70% / 0.06);
+    --shadow-medium: 0 10px 15px -3px hsl(210 30% 70% / 0.1), 0 4px 6px -2px hsl(210 30% 70% / 0.05);
+    --shadow-large: 0 25px 50px -12px hsl(210 30% 70% / 0.25);
+    --shadow-blue: 0 10px 30px -10px hsl(210 85% 58% / 0.3);
+    --shadow-card: 0 4px 12px -2px hsl(210 30% 50% / 0.1);
+
+    --sidebar-background: 45 25% 90%;
+    --sidebar-foreground: 30 15% 20%;
+    --sidebar-primary: 35 45% 65%;
+    --sidebar-primary-foreground: 30 15% 15%;
+    --sidebar-accent: 45 20% 85%;
+    --sidebar-accent-foreground: 30 15% 15%;
+    --sidebar-border: 45 25% 80%;
+    --sidebar-ring: 35 45% 65%;
+
+    /* Mobile-specific variables */
+    --mobile-padding: 1rem;
+    --mobile-radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 30 15% 8%;
+    --foreground: 45 25% 92%;
+
+    --card: 30 15% 12%;
+    --card-foreground: 45 25% 92%;
+
+    --popover: 30 15% 12%;
+    --popover-foreground: 45 25% 92%;
+
+    --primary: 35 45% 65%;
+    --primary-foreground: 30 15% 8%;
+
+    --secondary: 30 20% 18%;
+    --secondary-foreground: 45 25% 92%;
+
+    --muted: 30 20% 18%;
+    --muted-foreground: 45 15% 65%;
+
+    --accent: 30 20% 18%;
+    --accent-foreground: 45 25% 92%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 30 20% 18%;
+    --input: 30 20% 18%;
+    --ring: 35 45% 65%;
+    --sidebar-background: 30 15% 10%;
+    --sidebar-foreground: 45 25% 90%;
+    --sidebar-primary: 35 45% 65%;
+    --sidebar-primary-foreground: 30 15% 8%;
+    --sidebar-accent: 30 20% 15%;
+    --sidebar-accent-foreground: 45 25% 90%;
+    --sidebar-border: 30 20% 15%;
+    --sidebar-ring: 35 45% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-taxi-blue {
+    background-color: hsl(var(--taxi-blue));
+  }
+  
+  .text-taxi-blue {
+    color: hsl(var(--taxi-blue));
+  }
+  
+  .bg-taxi-orange {
+    background-color: hsl(var(--taxi-orange));
+  }
+  
+  .text-taxi-orange {
+    color: hsl(var(--taxi-orange));
+  }
+  
+  .bg-hero-gradient {
+    background: var(--gradient-hero);
+  }
+  
+  .bg-orange-gradient {
+    background: var(--gradient-orange);
+  }
+  
+  .shadow-taxi-blue {
+    box-shadow: var(--shadow-blue);
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-rotate-slow {
+    animation: rotate 20s linear infinite;
+  }
+
+  /* Button animations */
+  .animate-button-click {
+    animation: buttonClick 0.2s ease-out;
+  }
+
+  .animate-button-pulse {
+    animation: buttonPulse 0.6s ease-out;
+  }
+
+  .animate-button-scale {
+    animation: buttonScale 0.3s ease-out;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+@keyframes buttonClick {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes buttonPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 106, 69, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(139, 106, 69, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 106, 69, 0); }
+}
+
+@keyframes buttonScale {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Mobile Responsiveness */
+@layer utilities {
+  .mobile-container {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .mobile-text {
+    @apply text-sm sm:text-base;
+  }
+  
+  .mobile-button {
+    @apply py-3 px-6 text-sm sm:py-4 sm:px-8 sm:text-base;
+  }
+  
+  .mobile-grid {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  .mobile-booking-grid {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6;
+  }
+  
+  .mobile-form-input {
+    @apply h-12 sm:h-14 lg:h-16 text-base sm:text-lg lg:text-2xl;
+  }
+  
+  .mobile-card {
+    @apply rounded-xl sm:rounded-2xl lg:rounded-3xl;
+  }
+  
+  .mobile-padding {
+    @apply p-4 sm:p-6 lg:p-8;
+  }
+}
+
+/* Touch-friendly buttons for mobile */
+@media (max-width: 768px) {
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .booking-form-mobile {
+    margin: 0 -1rem;
+    border-radius: 0;
+  }
+  
+  .mobile-nav {
+    display: none;
+  }
+  
+  .mobile-nav.open {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 50;
+  }
+  
+  .mobile-nav-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 280px;
+    background: white;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  }
+  
+  .mobile-nav.open .mobile-nav-menu {
+    transform: translateX(0);
+  }
+}
+
+/* Loading Spinner Animations */
+.pl {
+  width: 6em;
+  height: 6em;
+}
+
+.pl__ring {
+  animation: ringA 2s linear infinite;
+}
+
+.pl__ring--a {
+  stroke: #f97316;
+}
+
+.pl__ring--b {
+  animation-name: ringB;
+  stroke: #ea580c;
+}
+
+.pl__ring--c {
+  animation-name: ringC;
+  stroke: #fb923c;
+}
+
+.pl__ring--d {
+  animation-name: ringD;
+  stroke: #f97316;
+}
+  
+/* Loading Ring Animations */
+@keyframes ringA {
+  from, 4% {
+    stroke-dasharray: 0 660;
+    stroke-width: 20;
+    stroke-dashoffset: -330;
+  }
+
+  12% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -335;
+  }
+
+  32% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -595;
+  }
+
+  40%, 54% {
+    stroke-dasharray: 0 660;
+    stroke-width: 20;
+    stroke-dashoffset: -660;
+  }
+
+  62% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -665;
+  }
+
+  82% {
+    stroke-dasharray: 60 600;
+    stroke-width: 30;
+    stroke-dashoffset: -925;
+  }
+
+  90%, to {
+    stroke-dasharray: 0 660;
+    stroke-width: 20;
+    stroke-dashoffset: -990;
+  }
+}
+
+@keyframes ringB {
+  from, 12% {
+    stroke-dasharray: 0 220;
+    stroke-width: 20;
+    stroke-dashoffset: -110;
+  }
+
+  20% {
+    stroke-dasharray: 20 200;
+    stroke-width: 30;
+    stroke-dashoffset: -115;
+  }
+
+  40% {
+    stroke-dasharray: 20 200;
+    stroke-width: 30;
+    stroke-dashoffset: -195;
+  }
+
+  48%, 62% {
+    stroke-dasharray: 0 220;
+    stroke-width: 20;
+    stroke-dashoffset: -220;
+  }
+
+  70% {
+    stroke-dasharray: 20 200;
+    stroke-width: 30;
+    stroke-dashoffset: -225;
+  }
+
+  90% {
+    stroke-dasharray: 20 200;
+    stroke-width: 30;
+    stroke-dashoffset: -305;
+  }
+
+  98%, to {
+    stroke-dasharray: 0 220;
+    stroke-width: 20;
+    stroke-dashoffset: -330;
+  }
+}
+
+@keyframes ringC {
+  from {
+    stroke-dasharray: 0 440;
+    stroke-width: 20;
+    stroke-dashoffset: 0;
+  }
+
+  8% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -5;
+  }
+
+  28% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -175;
+  }
+
+  36%, 58% {
+    stroke-dasharray: 0 440;
+    stroke-width: 20;
+    stroke-dashoffset: -220;
+  }
+
+  66% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -225;
+  }
+
+  86% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -395;
+  }
+
+  94%, to {
+    stroke-dasharray: 0 440;
+    stroke-width: 20;
+    stroke-dashoffset: -440;
+  }
+}
+
+@keyframes ringD {
+  from, 8% {
+    stroke-dasharray: 0 440;
+    stroke-width: 20;
+    stroke-dashoffset: 0;
+  }
+
+  16% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -5;
+  }
+
+  36% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -175;
+  }
+
+  44%, 50% {
+    stroke-dasharray: 0 440;
+    stroke-width: 20;
+    stroke-dashoffset: -220;
+  }
+
+  58% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -225;
+  }
+
+  78% {
+    stroke-dasharray: 40 400;
+    stroke-width: 30;
+    stroke-dashoffset: -395;
+  }
+
+  86%, to {
+    stroke-dasharray: 0 440;
+    stroke-width: 20;
+    stroke-dashoffset: -440;
+  }
+}

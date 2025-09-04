@@ -1,0 +1,31 @@
+# Handle client-side routing for SPA
+# This ensures all routes are served by index.html for React Router to handle
+# Admin routes
+/admin/*        /index.html   200
+
+# Main site routes
+
+# Optional: Handle specific routes if needed
+/round-trips    /index.html   200
+/pricing        /index.html   200
+/about          /index.html   200
+/services       /index.html   200
+/one-way-trips  /index.html   200
+/contact        /index.html   200
+/terms          /index.html   200
+/privacy        /index.html   200
+/faq            /index.html   200
+/support        /index.html   200
+/outstation-trips /index.html   200
+/corporate-travel /index.html   200
+/corporate-quote  /index.html   200
+/booking-confirmation /index.html   200
+/user/dashboard /index.html   200
+/admin/login    /index.html   200
+/admin/dashboard /index.html   200
+
+# Handle API calls (if any) - should go to actual API endpoints
+/api/*  /api/:splat  200
+
+# Catch all other routes and serve index.html for React Router
+/*    /index.html   200
