@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Phone, MapPin, Shield, Clock, MapIcon, Zap, Car, RotateCcw, Star, Users, MessageCircle, Mail, CheckCircle, Facebook, Twitter, Instagram, Chrome } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { AnimatedSection } from "@/components/ui/animated-section";
+import { AnimatedCard } from "@/components/ui/animated-card";
 import EnhancedBookingForm from "@/components/EnhancedBookingForm";
 import MobileBookingForm from "@/components/MobileBookingForm";
 import PopularRoutes from "@/components/PopularRoutes";
@@ -349,22 +351,26 @@ const Index = () => {
         <div className="container mx-auto px-4 flex items-center min-h-screen">
           <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
             {/* Left side - Hero content */}
-            <div className="text-left">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg">
-                Your Trusted Taxi Service<br />
-                Across South India
-              </h1>
-              <p className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90 drop-shadow-md">
-                Safe, reliable, and comfortable journeys with professional<br />
-                drivers, GPS tracking, and sanitized vehicles
-              </p>
-            </div>
+            <AnimatedSection animation="fade-right" duration={0.8}>
+              <div className="text-left">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-white drop-shadow-lg">
+                  Your Trusted Taxi Service<br />
+                  Across South India
+                </h1>
+                <p className="text-lg md:text-xl lg:text-2xl mb-8 text-white/90 drop-shadow-md">
+                  Safe, reliable, and comfortable journeys with professional<br />
+                  drivers, GPS tracking, and sanitized vehicles
+                </p>
+              </div>
+            </AnimatedSection>
             
             {/* Right side - Enhanced Booking Form */}
             <div id="booking-section" className="flex justify-end">
-              <div className={`w-full ${isMobile ? '' : 'max-w-md mr-8'}`}>
-                {isMobile ? <MobileBookingForm /> : <EnhancedBookingForm />}
-              </div>
+              <AnimatedSection animation="fade-left" delay={300} duration={0.8}>
+                <div className={`w-full ${isMobile ? '' : 'max-w-md mr-8'}`}>
+                  {isMobile ? <MobileBookingForm /> : <EnhancedBookingForm />}
+                </div>
+              </AnimatedSection>
             </div>
           </div>
         </div>
@@ -373,40 +379,39 @@ const Index = () => {
       {/* Feature badges and Stats Section */}
       <section className="py-16 bg-white/10 backdrop-blur-sm">
         <div className="container mx-auto px-4">
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            <div className="bg-primary/20 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/30">
-              <div className="flex items-center gap-2 text-primary">
-                <Shield className="h-5 w-5" />
-                <span className="font-medium">Verified Drivers</span>
-              </div>
+          <AnimatedSection animation="fade-up" delay={100}>
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              {[
+                { icon: Shield, text: "Verified Drivers" },
+                { icon: Clock, text: "24/7 Service" }, 
+                { icon: MapIcon, text: "GPS Tracking" },
+                { icon: Star, text: "4.8/5 Rating" }
+              ].map((badge, index) => (
+                <AnimatedCard key={index} delay={index * 100}>
+                  <div className="bg-primary/20 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/30">
+                    <div className="flex items-center gap-2 text-primary">
+                      <badge.icon className="h-5 w-5" />
+                      <span className="font-medium">{badge.text}</span>
+                    </div>
+                  </div>
+                </AnimatedCard>
+              ))}
             </div>
-            <div className="bg-primary/20 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/30">
-              <div className="flex items-center gap-2 text-primary">
-                <Clock className="h-5 w-5" />
-                <span className="font-medium">24/7 Service</span>
-              </div>
-            </div>
-            <div className="bg-primary/20 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/30">
-              <div className="flex items-center gap-2 text-primary">
-                <MapIcon className="h-5 w-5" />
-                <span className="font-medium">GPS Tracking</span>
-              </div>
-            </div>
-            <div className="bg-primary/20 backdrop-blur-sm px-6 py-3 rounded-full border border-primary/30">
-              <div className="flex items-center gap-2 text-primary">
-                <Star className="h-5 w-5" />
-                <span className="font-medium">4.8/5 Rating</span>
-              </div>
-            </div>
-          </div>
+          </AnimatedSection>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold mb-2 text-primary">{stat.number}</div>
-                <div className="text-gray-700 text-sm md:text-base font-medium">{stat.label}</div>
-              </div>)}
-          </div>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <AnimatedCard key={index} delay={index * 150}>
+                  <div className="text-center">
+                    <div className="text-3xl md:text-4xl font-bold mb-2 text-primary animate-count-up">{stat.number}</div>
+                    <div className="text-gray-700 text-sm md:text-base font-medium">{stat.label}</div>
+                  </div>
+                </AnimatedCard>
+              ))}
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -416,61 +421,71 @@ const Index = () => {
       {/* Services Section */}
       <section id="services" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
-            <p className="text-xl text-gray-600">
-              Choose from our range of taxi services designed to meet your specific travel needs
-            </p>
-          </div>
+          <AnimatedSection animation="fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+              <p className="text-xl text-gray-600">
+                Choose from our range of taxi services designed to meet your specific travel needs
+              </p>
+            </div>
+          </AnimatedSection>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {services.map((service, index) => <Card key={index} className={`${service.bgColor} border-2 hover:shadow-lg transition-shadow`}>
-                <CardContent className="p-8">
-                  <div className="text-center mb-6">
-                    {service.icon}
-                    <h3 className="text-2xl font-bold text-gray-900 mt-4 mb-2">{service.title}</h3>
-                    <p className="text-gray-600">{service.description}</p>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Features:</h4>
-                    <ul className="space-y-2">
-                      {service.features.map((feature, idx) => <li key={idx} className="flex items-center gap-2 text-gray-700">
-                          <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span>{feature}</span>
-                        </li>)}
-                    </ul>
-                  </div>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-semibold text-gray-900 mb-3">Benefits:</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {service.benefits.map((benefit, idx) => <span key={idx} className="px-3 py-1 bg-white rounded-full text-sm font-medium border">
-                          {benefit}
-                        </span>)}
+            {services.map((service, index) => (
+              <AnimatedCard key={index} delay={index * 100}>
+                <Card className={`${service.bgColor} border-2 hover:shadow-lg transition-shadow h-full`}>
+                  <CardContent className="p-8">
+                    <div className="text-center mb-6">
+                      {service.icon}
+                      <h3 className="text-2xl font-bold text-gray-900 mt-4 mb-2">{service.title}</h3>
+                      <p className="text-gray-600">{service.description}</p>
                     </div>
-                  </div>
-                  
-                  <Button onClick={() => {
-                    // Dispatch custom events based on service type
-                    if (service.title === 'Airport Transfer') {
-                      window.dispatchEvent(new CustomEvent('updateTripType', { detail: 'airport' }));
-                    } else if (service.title === 'Outstation Trips') {
-                      window.dispatchEvent(new CustomEvent('updateTripType', { detail: 'oneway' }));
-                    } else if (service.title === 'Local Rides') {
-                      window.dispatchEvent(new CustomEvent('updateTripType', { detail: 'local' }));
-                    }
                     
-                    // Scroll to top to show the booking form
-                    window.scrollTo({
-                      top: 0,
-                      behavior: 'smooth'
-                    });
-                  }} className={`w-full ${service.buttonColor} text-white py-3 font-semibold`}>
-                    {service.buttonText} →
-                  </Button>
-                </CardContent>
-              </Card>)}
+                    <div className="mb-6">
+                      <h4 className="font-semibold text-gray-900 mb-3">Features:</h4>
+                      <ul className="space-y-2">
+                        {service.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-center gap-2 text-gray-700">
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    
+                    <div className="mb-6">
+                      <h4 className="font-semibold text-gray-900 mb-3">Benefits:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {service.benefits.map((benefit, idx) => (
+                          <span key={idx} className="px-3 py-1 bg-white rounded-full text-sm font-medium border">
+                            {benefit}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <Button onClick={() => {
+                      // Dispatch custom events based on service type
+                      if (service.title === 'Airport Transfer') {
+                        window.dispatchEvent(new CustomEvent('updateTripType', { detail: 'airport' }));
+                      } else if (service.title === 'Outstation Trips') {
+                        window.dispatchEvent(new CustomEvent('updateTripType', { detail: 'oneway' }));
+                      } else if (service.title === 'Local Rides') {
+                        window.dispatchEvent(new CustomEvent('updateTripType', { detail: 'local' }));
+                      }
+                      
+                      // Scroll to top to show the booking form
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                      });
+                    }} className={`w-full ${service.buttonColor} text-white py-3 font-semibold`}>
+                      {service.buttonText} →
+                    </Button>
+                  </CardContent>
+                </Card>
+              </AnimatedCard>
+            ))}
           </div>
         </div>
       </section>
@@ -478,18 +493,24 @@ const Index = () => {
       {/* Why Choose Us Section */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Us?</h2>
-          </div>
+          <AnimatedSection animation="fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Us?</h2>
+            </div>
+          </AnimatedSection>
           
           <div className="grid md:grid-cols-4 gap-8">
-            {whyChooseUs.map((item, index) => <div key={index} className="text-center">
-                <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
-                  {item.icon}
+            {whyChooseUs.map((item, index) => (
+              <AnimatedCard key={index} delay={index * 150}>
+                <div className="text-center">
+                  <div className="bg-blue-100 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+                    {item.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
+                  <p className="text-gray-600">{item.description}</p>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </div>)}
+              </AnimatedCard>
+            ))}
           </div>
         </div>
       </section>
@@ -497,39 +518,36 @@ const Index = () => {
       {/* Transparent Pricing Section */}
       <section id="pricing" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Transparent Pricing</h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Our competitive rates for popular routes across South India
-            </p>
-            
-            {/* Vehicle Types */}
-            <div className="flex justify-center gap-4 md:gap-8 mb-8 flex-wrap">
-              <div className="text-center">
-                <Car className="h-8 md:h-12 w-8 md:w-12 mx-auto mb-2 text-gray-700" />
-                <div className="font-semibold text-sm md:text-base">SEDAN</div>
-                <div className="text-primary font-bold text-sm md:text-base">₹14/km</div>
-              </div>
-              <div className="text-center">
-                <Car className="h-8 md:h-12 w-8 md:w-12 mx-auto mb-2 text-gray-700" />
-                <div className="font-semibold text-sm md:text-base">ETIOS</div>
-                <div className="text-primary font-bold text-sm md:text-base">₹15/km</div>
-              </div>
-              <div className="text-center">
-                <Car className="h-8 md:h-12 w-8 md:w-12 mx-auto mb-2 text-gray-700" />
-                <div className="font-semibold text-sm md:text-base">SUV</div>
-                <div className="text-primary font-bold text-sm md:text-base">₹19/km</div>
-              </div>
-              <div className="text-center">
-                <Car className="h-8 md:h-12 w-8 md:w-12 mx-auto mb-2 text-gray-700" />
-                <div className="font-semibold text-sm md:text-base">INNOVA</div>
-                <div className="text-primary font-bold text-sm md:text-base">₹20/km</div>
+          <AnimatedSection animation="fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Transparent Pricing</h2>
+              <p className="text-xl text-gray-600 mb-8">
+                Our competitive rates for popular routes across South India
+              </p>
+              
+              {/* Vehicle Types */}
+              <div className="flex justify-center gap-4 md:gap-8 mb-8 flex-wrap">
+                {[
+                  { name: 'SEDAN', price: '₹14/km' },
+                  { name: 'ETIOS', price: '₹15/km' },
+                  { name: 'SUV', price: '₹19/km' },
+                  { name: 'INNOVA', price: '₹20/km' }
+                ].map((vehicle, index) => (
+                  <AnimatedCard key={index} delay={index * 100}>
+                    <div className="text-center">
+                      <Car className="h-8 md:h-12 w-8 md:w-12 mx-auto mb-2 text-gray-700" />
+                      <div className="font-semibold text-sm md:text-base">{vehicle.name}</div>
+                      <div className="text-primary font-bold text-sm md:text-base">{vehicle.price}</div>
+                    </div>
+                  </AnimatedCard>
+                ))}
               </div>
             </div>
-          </div>
+          </AnimatedSection>
 
           {/* Mobile-Responsive Pricing Table */}
-          <div className="max-w-6xl mx-auto">
+          <AnimatedSection animation="fade-up" delay={200}>
+            <div className="max-w-6xl mx-auto">
             {/* Desktop Table */}
             <div className="hidden lg:block">
               <div className="text-white rounded-t-lg overflow-hidden" style={{
@@ -547,14 +565,18 @@ const Index = () => {
                 </div>
               </div>
               <div className="bg-white border border-gray-200 rounded-b-lg overflow-hidden">
-                {pricingData.map((row, index) => <div key={index} className="grid grid-cols-6 gap-4 p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 text-center">
-                    <div className="font-medium text-gray-900">{row.route}</div>
-                    <div className="text-gray-600">{row.distance}</div>
-                    <div className="text-gray-600">{row.duration}</div>
-                    <div className="text-primary font-semibold">{row.hatchback}</div>
-                    <div className="text-primary font-semibold">{row.sedan}</div>
-                    <div className="text-primary font-semibold">{row.suv}</div>
-                  </div>)}
+                {pricingData.map((row, index) => (
+                  <AnimatedCard key={index} delay={index * 100}>
+                    <div className="grid grid-cols-6 gap-4 p-4 border-b border-gray-100 last:border-b-0 hover:bg-gray-50 text-center">
+                      <div className="font-medium text-gray-900">{row.route}</div>
+                      <div className="text-gray-600">{row.distance}</div>
+                      <div className="text-gray-600">{row.duration}</div>
+                      <div className="text-primary font-semibold">{row.hatchback}</div>
+                      <div className="text-primary font-semibold">{row.sedan}</div>
+                      <div className="text-primary font-semibold">{row.suv}</div>
+                    </div>
+                  </AnimatedCard>
+                ))}
               </div>
             </div>
 
@@ -673,100 +695,112 @@ const Index = () => {
               </div>
             </div>
           </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Customer Reviews Section */}
       <section id="reviews" className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => <Star key={i} className="h-6 w-6 text-yellow-400 fill-current" />)}
+          <AnimatedSection animation="fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+              <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => <Star key={i} className="h-6 w-6 text-yellow-400 fill-current" />)}
+                </div>
+                <span className="text-2xl font-bold text-gray-900">4.8</span>
+                <span className="text-gray-600">(4 reviews)</span>
               </div>
-              <span className="text-2xl font-bold text-gray-900">4.8</span>
-              <span className="text-gray-600">(4 reviews)</span>
+              <p className="text-xl text-gray-600">
+                Real feedback from our satisfied customers across South India
+              </p>
             </div>
-            <p className="text-xl text-gray-600">
-              Real feedback from our satisfied customers across South India
-            </p>
-          </div>
+          </AnimatedSection>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
-            <div className="text-center">
-              <Users className="h-12 w-12 text-orange-500 mx-auto mb-3" />
-              <div className="text-3xl font-bold text-primary">10,000+</div>
-              <div className="text-gray-600">Happy Customers</div>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
+              {[
+                { icon: Users, text: "10,000+", label: "Happy Customers", color: "text-orange-500" },
+                { icon: Car, text: "50,000+", label: "Trips Completed", color: "text-red-500" },
+                { icon: Star, text: "4.8/5", label: "Average Rating", color: "text-yellow-500" },
+                { icon: Phone, text: "24/7", label: "Support Available", color: "text-blue-500" }
+              ].map((stat, index) => (
+                <AnimatedCard key={index} delay={index * 100}>
+                  <div className="text-center">
+                    <stat.icon className={`h-12 w-12 ${stat.color} mx-auto mb-3`} />
+                    <div className="text-3xl font-bold text-primary">{stat.text}</div>
+                    <div className="text-gray-600">{stat.label}</div>
+                  </div>
+                </AnimatedCard>
+              ))}
             </div>
-            <div className="text-center">
-              <Car className="h-12 w-12 text-red-500 mx-auto mb-3" />
-              <div className="text-3xl font-bold text-primary">50,000+</div>
-              <div className="text-gray-600">Trips Completed</div>
-            </div>
-            <div className="text-center">
-              <Star className="h-12 w-12 text-yellow-500 mx-auto mb-3" />
-              <div className="text-3xl font-bold text-primary">4.8/5</div>
-              <div className="text-gray-600">Average Rating</div>
-            </div>
-            <div className="text-center">
-              <Phone className="h-12 w-12 text-blue-500 mx-auto mb-3" />
-              <div className="text-3xl font-bold text-primary">24/7</div>
-              <div className="text-gray-600">Support Available</div>
-            </div>
-          </div>
+          </AnimatedSection>
 
           {/* Testimonials */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
-            {testimonials.map((testimonial, index) => <Card key={index} className="bg-white hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center font-bold">
-                      {testimonial.initial}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
-                      <div className="flex items-center gap-1 mt-1">
-                        {[...Array(testimonial.rating)].map((_, i) => <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />)}
-                        <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+          <AnimatedSection animation="fade-up" delay={300}>
+            <div className="grid md:grid-cols-2 gap-8 mb-16">
+              {testimonials.map((testimonial, index) => (
+                <AnimatedCard key={index} delay={index * 150}>
+                  <Card className="bg-white hover:shadow-lg transition-shadow h-full">
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div className="bg-primary text-white rounded-full w-12 h-12 flex items-center justify-center font-bold">
+                          {testimonial.initial}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
+                          <div className="flex items-center gap-1 mt-1">
+                            {[...Array(testimonial.rating)].map((_, i) => (
+                              <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                            ))}
+                            <CheckCircle className="h-4 w-4 text-green-500 ml-2" />
+                          </div>
+                        </div>
+                        <div className="text-sm text-gray-500">{testimonial.date}</div>
                       </div>
-                    </div>
-                    <div className="text-sm text-gray-500">{testimonial.date}</div>
-                  </div>
-                  <p className="text-gray-700 mb-3 italic">"{testimonial.review}"</p>
-                  <div className="text-primary text-sm font-medium">{testimonial.route}</div>
-                </CardContent>
-              </Card>)}
-          </div>
+                      <p className="text-gray-700 mb-3 italic">"{testimonial.review}"</p>
+                      <div className="text-primary text-sm font-medium">{testimonial.route}</div>
+                    </CardContent>
+                  </Card>
+                </AnimatedCard>
+              ))}
+            </div>
+          </AnimatedSection>
 
           {/* CTA */}
-          <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-12 text-center text-white">
-            <h3 className="text-3xl font-bold mb-4">Join Thousands of Satisfied Customers</h3>
-            <p className="text-xl mb-8 text-blue-100">
-              Experience the comfort and reliability that our customers love
-            </p>
-            <Button className="bg-white text-primary hover:bg-gray-100 px-8 py-3 font-semibold rounded-lg">
-              Book Your Ride Today
-            </Button>
-          </div>
+          <AnimatedSection animation="scale-in" delay={400}>
+            <div className="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-12 text-center text-white">
+              <h3 className="text-3xl font-bold mb-4">Join Thousands of Satisfied Customers</h3>
+              <p className="text-xl mb-8 text-blue-100">
+                Experience the comfort and reliability that our customers love
+              </p>
+              <Button className="bg-white text-primary hover:bg-gray-100 px-8 py-3 font-semibold rounded-lg">
+                Book Your Ride Today
+              </Button>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
-            <p className="text-xl text-gray-600">
-              Get in touch with us for bookings, inquiries, or support. We're here to help 24/7.
-            </p>
-          </div>
+          <AnimatedSection animation="fade-up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h2>
+              <p className="text-xl text-gray-600">
+                Get in touch with us for bookings, inquiries, or support. We're here to help 24/7.
+              </p>
+            </div>
+          </AnimatedSection>
 
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Get in Touch */}
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-8">Get in Touch</h3>
+            <AnimatedSection animation="fade-right" delay={200}>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-8">Get in Touch</h3>
               
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
@@ -816,12 +850,14 @@ const Index = () => {
                     Chat with us on WhatsApp
                   </Button>
                 </div>
+                </div>
               </div>
-            </div>
+            </AnimatedSection>
 
             {/* Send us a Message */}
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-8">Send us a Message</h3>
+            <AnimatedSection animation="fade-left" delay={200}>
+              <div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-8">Send us a Message</h3>
               
               <form className="space-y-6" onSubmit={e => {
               e.preventDefault();
@@ -880,6 +916,7 @@ const Index = () => {
                 </Button>
               </form>
             </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -887,15 +924,23 @@ const Index = () => {
       {/* Service Areas */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Service Areas</h2>
-          </div>
+          <AnimatedSection animation="fade-up">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Service Areas</h2>
+            </div>
+          </AnimatedSection>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-4xl mx-auto">
-            {serviceCities.map((city, index) => <Button key={index} variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white">
-                {city}
-              </Button>)}
-          </div>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-w-4xl mx-auto">
+              {serviceCities.map((city, index) => (
+                <AnimatedCard key={index} delay={index * 50}>
+                  <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white w-full">
+                    {city}
+                  </Button>
+                </AnimatedCard>
+              ))}
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
