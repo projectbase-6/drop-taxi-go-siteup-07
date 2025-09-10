@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Car, ArrowLeft, MapPin, Clock, Route, Users, Shield, CreditCard, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AnimatedSection } from '@/components/ui/animated-section';
+import { AnimatedCard } from '@/components/ui/animated-card';
 
 const Services = () => {
   const services = [{
@@ -118,29 +120,41 @@ const Services = () => {
         backgroundPosition: 'center'
       }}>
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Comprehensive Taxi Services</h1>
-          <p className="text-xl opacity-90 max-w-3xl mx-auto mb-8">
-            Experience premium taxi solutions designed to meet all your travel needs across South India. 
-            From quick city rides to long-distance journeys, we've got you covered with professional service and competitive pricing.
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl font-bold">500+</div>
-              <div className="text-sm opacity-80">Daily Rides</div>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Comprehensive Taxi Services</h1>
+            <p className="text-xl opacity-90 max-w-3xl mx-auto mb-8">
+              Experience premium taxi solutions designed to meet all your travel needs across South India. 
+              From quick city rides to long-distance journeys, we've got you covered with professional service and competitive pricing.
+            </p>
+          </AnimatedSection>
+          <AnimatedSection animation="fade-up" delay={400}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <AnimatedCard delay={100}>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">500+</div>
+                  <div className="text-sm opacity-80">Daily Rides</div>
+                </div>
+              </AnimatedCard>
+              <AnimatedCard delay={200}>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">50+</div>
+                  <div className="text-sm opacity-80">Cities Covered</div>
+                </div>
+              </AnimatedCard>
+              <AnimatedCard delay={300}>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">4.8★</div>
+                  <div className="text-sm opacity-80">Customer Rating</div>
+                </div>
+              </AnimatedCard>
+              <AnimatedCard delay={400}>
+                <div className="text-center">
+                  <div className="text-3xl font-bold">24/7</div>
+                  <div className="text-sm opacity-80">Support Available</div>
+                </div>
+              </AnimatedCard>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">50+</div>
-              <div className="text-sm opacity-80">Cities Covered</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">4.8★</div>
-              <div className="text-sm opacity-80">Customer Rating</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold">24/7</div>
-              <div className="text-sm opacity-80">Support Available</div>
-            </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -150,7 +164,16 @@ const Services = () => {
           <div className="space-y-16">
             {services.map((service, index) => {
             const IconComponent = service.icon;
-            return <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`} id={service.title === "Round‑Trip Packages" ? "round-trips" : undefined}>
+            return <div
+                key={index}
+                className={`${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}
+                id={service.title === "Round‑Trip Packages" ? "round-trips" : undefined}
+              >
+                <AnimatedSection
+                  animation={index % 2 === 0 ? "fade-right" : "fade-left"}
+                  delay={200}
+                  className={`grid lg:grid-cols-2 gap-12 items-center`}
+                >
                   <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
                     <div className="flex items-center space-x-3 mb-6">
                       <div className="bg-orange-100 p-3 rounded-lg">
@@ -179,9 +202,12 @@ const Services = () => {
                     )}
                   </div>
                   <div className={index % 2 === 1 ? 'lg:col-start-1' : ''}>
-                    <img src={service.image} alt={service.title} className="rounded-lg w-full h-80 object-cover shadow-lg" />
+                    <AnimatedCard delay={400} hoverEffect={false}>
+                      <img src={service.image} alt={service.title} className="rounded-lg w-full h-80 object-cover shadow-lg" />
+                    </AnimatedCard>
                   </div>
-                </div>;
+                </AnimatedSection>
+              </div>;
           })}
           </div>
         </div>
@@ -190,25 +216,27 @@ const Services = () => {
       {/* Additional Features Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
+          <AnimatedSection animation="fade-up" className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">Why Choose Drop Taxi Go?</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               We go beyond just transportation to provide a complete travel experience with safety, comfort, and reliability at the forefront.
             </p>
-          </div>
+          </AnimatedSection>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {additionalFeatures.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
-                  <CardContent className="pt-6">
-                    <div className="bg-orange-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                      <IconComponent className="h-8 w-8 text-orange-600" />
-                    </div>
-                    <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                    <p className="text-gray-600 text-sm">{feature.description}</p>
-                  </CardContent>
-                </Card>
+                <AnimatedCard key={index} delay={index * 100}>
+                  <Card className="text-center p-6 hover:shadow-lg transition-shadow">
+                    <CardContent className="pt-6">
+                      <div className="bg-orange-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                        <IconComponent className="h-8 w-8 text-orange-600" />
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+                      <p className="text-gray-600 text-sm">{feature.description}</p>
+                    </CardContent>
+                  </Card>
+                </AnimatedCard>
               );
             })}
           </div>
@@ -218,22 +246,24 @@ const Services = () => {
       {/* CTA Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4">Ready to Book Your Ride?</h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Experience our premium taxi services today. Book now for a comfortable, safe, and reliable journey at competitive prices.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/">
-              <Button className="bg-gradient-to-r from-orange-400 to-yellow-400 text-white px-8 py-3 text-lg">
-                Book Now
-              </Button>
-            </Link>
-            <Link to="/contact">
-              <Button variant="outline" className="px-8 py-3 text-lg">
-                Contact Us
-              </Button>
-            </Link>
-          </div>
+          <AnimatedSection animation="fade-up">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Ready to Book Your Ride?</h2>
+            <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+              Experience our premium taxi services today. Book now for a comfortable, safe, and reliable journey at competitive prices.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to="/">
+                <Button className="bg-gradient-to-r from-orange-400 to-yellow-400 text-white px-8 py-3 text-lg">
+                  Book Now
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button variant="outline" className="px-8 py-3 text-lg">
+                  Contact Us
+                </Button>
+              </Link>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
     </div>;

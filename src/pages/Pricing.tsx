@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { Car, ArrowLeft, Users, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AnimatedSection } from '@/components/ui/animated-section';
+import { AnimatedCard } from '@/components/ui/animated-card';
 const Pricing = () => {
   const vehicleTypes = [{
     type: "Sedan (4+1 seats)",
@@ -67,10 +69,12 @@ const Pricing = () => {
       backgroundPosition: 'center'
     }}>
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Transparent Pricing</h1>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            Clear and fair pricing with no hidden charges. Choose the package that suits your needs.
-          </p>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Transparent Pricing</h1>
+            <p className="text-xl opacity-90 max-w-2xl mx-auto">
+              Clear and fair pricing with no hidden charges. Choose the package that suits your needs.
+            </p>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -79,35 +83,41 @@ const Pricing = () => {
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Vehicle Types */}
           <div className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Vehicle Types & Rates</h2>
+            <AnimatedSection animation="fade-up">
+              <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Vehicle Types & Rates</h2>
+            </AnimatedSection>
             <div className="grid md:grid-cols-2 gap-8">
-              {vehicleTypes.map((vehicle, index) => <Card key={index} className="shadow-lg overflow-hidden">
-                  <div className="h-48 overflow-hidden">
-                    <img src={vehicle.image} alt={vehicle.type} className="w-full h-full object-cover" />
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">{vehicle.type}</h3>
-                    <div className="space-y-3 mb-4">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Outstation Rate:</span>
-                        <span className="font-semibold text-orange-600">{vehicle.outstation}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Round Trip Rate:</span>
-                        <span className="font-semibold text-orange-600">{vehicle.roundTrip}</span>
-                      </div>
+              {vehicleTypes.map((vehicle, index) => 
+                <AnimatedCard key={index} delay={index * 200}>
+                  <Card className="shadow-lg overflow-hidden">
+                    <div className="h-48 overflow-hidden">
+                      <img src={vehicle.image} alt={vehicle.type} className="w-full h-full object-cover" />
                     </div>
-                    <div className="space-y-2">
-                      <h4 className="font-semibold text-gray-800">Included Features:</h4>
-                      <ul className="space-y-1">
-                        {vehicle.features.map((feature, featureIndex) => <li key={featureIndex} className="flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                            <span className="text-gray-600 text-sm">{feature}</span>
-                          </li>)}
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>)}
+                    <CardContent className="p-6">
+                      <h3 className="text-xl font-bold text-gray-800 mb-4">{vehicle.type}</h3>
+                      <div className="space-y-3 mb-4">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Outstation Rate:</span>
+                          <span className="font-semibold text-orange-600">{vehicle.outstation}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Round Trip Rate:</span>
+                          <span className="font-semibold text-orange-600">{vehicle.roundTrip}</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-gray-800">Included Features:</h4>
+                        <ul className="space-y-1">
+                          {vehicle.features.map((feature, featureIndex) => <li key={featureIndex} className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+                              <span className="text-gray-600 text-sm">{feature}</span>
+                            </li>)}
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </AnimatedCard>
+              )}
             </div>
           </div>
 
@@ -221,15 +231,17 @@ const Pricing = () => {
       backgroundPosition: 'center'
     }}>
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Book?</h2>
-          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Get instant quotes and enjoy transparent pricing with no hidden charges.
-          </p>
-          <Link to="/">
-            <Button className="bg-white text-orange-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
-              Book Your Ride Now
-            </Button>
-          </Link>
+          <AnimatedSection animation="fade-up">
+            <h2 className="text-3xl font-bold mb-4">Ready to Book?</h2>
+            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+              Get instant quotes and enjoy transparent pricing with no hidden charges.
+            </p>
+            <Link to="/">
+              <Button className="bg-white text-orange-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold">
+                Book Your Ride Now
+              </Button>
+            </Link>
+          </AnimatedSection>
         </div>
       </section>
     </div>;

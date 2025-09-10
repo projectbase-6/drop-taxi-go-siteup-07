@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Shield, Users, Clock, Star, Award, Heart, CarFront, MapPin, Navigation, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { AnimatedSection } from '@/components/ui/animated-section';
+import { AnimatedCard } from '@/components/ui/animated-card';
 import experiencedDriversImg from '@/assets/experienced-drivers.jpg';
 import taxiFleetImg from '@/assets/taxi-fleet.jpg';
 import gpsNavigationImg from '@/assets/gps-navigation.jpg';
@@ -34,59 +36,69 @@ const AboutUs = () => {
       {/* Hero Section */}
       <section className="py-16 text-white" style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)), url('/lovable-uploads/3b6aa59c-dd18-4aed-be20-d9806833f184.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container mx-auto px-4 text-center">
-          <div className="mb-8">
-            <img src="/lovable-uploads/3c2d821a-b9d5-45c1-8318-815cb5126366.png" alt="Drop Taxi Go Logo" className="h-24 w-24 mx-auto mb-6" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">About Drop Taxi Go</h1>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            Your trusted partner for safe, reliable, and comfortable journeys across South India
-          </p>
+          <AnimatedSection animation="fade-up" delay={200}>
+            <div className="mb-8">
+              <img src="/lovable-uploads/3c2d821a-b9d5-45c1-8318-815cb5126366.png" alt="Drop Taxi Go Logo" className="h-24 w-24 mx-auto mb-6" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">About Drop Taxi Go</h1>
+            <p className="text-xl opacity-90 max-w-2xl mx-auto">
+              Your trusted partner for safe, reliable, and comfortable journeys across South India
+            </p>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Core Values Section */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Core Values</h2>
+          <AnimatedSection animation="fade-up">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Core Values</h2>
+          </AnimatedSection>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Safety */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="rounded-full bg-red-100 p-3">
-                    <Shield className="h-6 w-6 text-red-600" />
+            <AnimatedCard delay={100}>
+              <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="rounded-full bg-red-100 p-3">
+                      <Shield className="h-6 w-6 text-red-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800">Safety First</h3>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800">Safety First</h3>
-                </div>
-                <p className="text-gray-600">Ensuring your safety with well-maintained vehicles and professional drivers.</p>
-              </CardContent>
-            </Card>
+                  <p className="text-gray-600">Ensuring your safety with well-maintained vehicles and professional drivers.</p>
+                </CardContent>
+              </Card>
+            </AnimatedCard>
 
             {/* Reliability */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="rounded-full bg-green-100 p-3">
-                    <Clock className="h-6 w-6 text-green-600" />
+            <AnimatedCard delay={200}>
+              <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="rounded-full bg-green-100 p-3">
+                      <Clock className="h-6 w-6 text-green-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800">Reliability</h3>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800">Reliability</h3>
-                </div>
-                <p className="text-gray-600">Punctual and dependable service, every time you ride with us.</p>
-              </CardContent>
-            </Card>
+                  <p className="text-gray-600">Punctual and dependable service, every time you ride with us.</p>
+                </CardContent>
+              </Card>
+            </AnimatedCard>
 
             {/* Comfort */}
-            <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="rounded-full bg-blue-100 p-3">
-                    <CarFront className="h-6 w-6 text-blue-600" />
+            <AnimatedCard delay={300}>
+              <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="rounded-full bg-blue-100 p-3">
+                      <CarFront className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-800">Comfort</h3>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-800">Comfort</h3>
-                </div>
-                <p className="text-gray-600">Enjoy a smooth and comfortable ride in our well-equipped taxis.</p>
-              </CardContent>
-            </Card>
+                  <p className="text-gray-600">Enjoy a smooth and comfortable ride in our well-equipped taxis.</p>
+                </CardContent>
+              </Card>
+            </AnimatedCard>
           </div>
         </div>
       </section>
@@ -95,20 +107,26 @@ const AboutUs = () => {
       <section className="py-12 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Story</h2>
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <img src={taxiFleetImg} alt="Drop Taxi Go Fleet" className="rounded-lg shadow-lg w-full h-64 object-cover" />
+            <AnimatedSection animation="fade-up">
+              <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Story</h2>
+            </AnimatedSection>
+            <AnimatedSection animation="fade-left" delay={200}>
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <AnimatedCard hoverEffect={false}>
+                    <img src={taxiFleetImg} alt="Drop Taxi Go Fleet" className="rounded-lg shadow-lg w-full h-64 object-cover" />
+                  </AnimatedCard>
+                </div>
+                <div>
+                  <p className="text-gray-600 text-lg leading-relaxed mb-4">
+                    Drop Taxi in One Way provides world class taxi service at an affordable price. As a tourist, you can travel to any part of South India with our very knowledgeable and experienced drivers.
+                  </p>
+                  <p className="text-gray-600 text-lg leading-relaxed">
+                    You can visit all the local places with regard to your business. You can reach on time to meeting halls, companies, hotels, hospitals, airport, bus station, railway station, or any other place you have to visit anywhere in Tamil Nadu, Pondicherry, Kerala, Andhra Pradesh And Bangalore.
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-gray-600 text-lg leading-relaxed mb-4">
-                  Drop Taxi in One Way provides world class taxi service at an affordable price. As a tourist, you can travel to any part of South India with our very knowledgeable and experienced drivers.
-                </p>
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  You can visit all the local places with regard to your business. You can reach on time to meeting halls, companies, hotels, hospitals, airport, bus station, railway station, or any other place you have to visit anywhere in Tamil Nadu, Pondicherry, Kerala, Andhra Pradesh And Bangalore.
-                </p>
-              </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -172,7 +190,9 @@ const AboutUs = () => {
       {/* Coverage Area Section */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Service Coverage</h2>
+          <AnimatedSection animation="fade-up">
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Our Service Coverage</h2>
+          </AnimatedSection>
           <div className="max-w-4xl mx-auto">
             <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
               {[{
@@ -190,12 +210,16 @@ const AboutUs = () => {
             }, {
               state: 'Bangalore',
               icon: '🏙️'
-            }].map((location, index) => <Card key={index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
+            }].map((location, index) => 
+              <AnimatedCard key={index} delay={index * 100}>
+                <Card className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300">
                   <CardContent className="p-6">
                     <div className="text-4xl mb-3">{location.icon}</div>
                     <h3 className="font-semibold text-gray-800">{location.state}</h3>
                   </CardContent>
-                </Card>)}
+                </Card>
+              </AnimatedCard>
+            )}
             </div>
           </div>
         </div>
