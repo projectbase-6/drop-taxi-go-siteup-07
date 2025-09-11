@@ -394,12 +394,7 @@ const EnhancedBookingForm = () => {
                 {/* Modern Time Picker */}
                 <div className="space-y-2">
                   <Label className="text-gray-700 font-semibold text-base">Pickup Time</Label>
-                  <CustomTimePicker 
-                    value={pickupTime} 
-                    onChange={setPickupTime} 
-                    placeholder="Select time" 
-                    className="w-full h-10 px-3 border-2 border-gray-200 rounded-xl hover:border-primary focus:border-primary" 
-                  />
+                  <CustomTimePicker value={pickupTime} onChange={setPickupTime} placeholder="Select time" className="w-full h-10 px-3 border-2 border-gray-200 rounded-xl hover:border-primary focus:border-primary" />
                 </div>
               </div>
 
@@ -492,7 +487,7 @@ const EnhancedBookingForm = () => {
                     <PopoverTrigger asChild>
                       <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 hover:border-primary rounded-xl hover:bg-white hover:text-black", !returnDate && "text-muted-foreground hover:text-black")}>
                         <CalendarIcon className="mr-3 h-5 w-5 text-primary" />
-                        {formatDisplayDate(returnDate) || <span>Select return date</span>}
+                        {formatDisplayDate(returnDate) || <span>Return date</span>}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -515,7 +510,7 @@ const EnhancedBookingForm = () => {
                     <PopoverTrigger asChild>
                       <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !returnTime && "text-muted-foreground hover:text-black")}>
                         <Clock className="mr-3 h-5 w-5 text-primary" />
-                        {returnTime || <span>Select return time</span>}
+                        {returnTime || <span>Return time</span>}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-4" align="start">
@@ -624,39 +619,22 @@ const EnhancedBookingForm = () => {
         }} pickerType={mapPickerType === 'destination' ? 'drop' : 'pickup'} />
 
           {/* Passenger Details - Vertical Layout with Full Width */}
-          {isFormValid && !showVehicleSelection && (
-            <div className="space-y-4 mb-6 mt-6">
+          {isFormValid && !showVehicleSelection && <div className="space-y-4 mb-6 mt-6">
               <div className="bg-gray-50 rounded-xl p-5">
                 <Label className="text-sm font-medium text-gray-600 mb-2 block">Passenger Name *</Label>
-                <Input 
-                  value={passengerName} 
-                  onChange={e => setPassengerName(e.target.value)} 
-                  placeholder="Enter your full name" 
-                  className="h-12 border-gray-200 rounded-xl bg-white w-full text-base" 
-                />
+                <Input value={passengerName} onChange={e => setPassengerName(e.target.value)} placeholder="Enter your full name" className="h-12 border-gray-200 rounded-xl bg-white w-full text-base" />
               </div>
               
               <div className="bg-gray-50 rounded-xl p-5">
                 <Label className="text-sm font-medium text-gray-600 mb-2 block">Phone Number *</Label>
-                <Input 
-                  value={passengerPhone} 
-                  onChange={e => setPassengerPhone(e.target.value)} 
-                  placeholder="Enter your phone number" 
-                  className="h-12 border-gray-200 rounded-xl bg-white w-full text-base" 
-                />
+                <Input value={passengerPhone} onChange={e => setPassengerPhone(e.target.value)} placeholder="Enter your phone number" className="h-12 border-gray-200 rounded-xl bg-white w-full text-base" />
               </div>
               
               <div className="bg-gray-50 rounded-xl p-5">
                 <Label className="text-sm font-medium text-gray-600 mb-2 block">Email Address (Optional)</Label>
-                <Input 
-                  value={passengerEmail} 
-                  onChange={e => setPassengerEmail(e.target.value)} 
-                  placeholder="Enter your email address" 
-                  className="h-12 border-gray-200 rounded-xl bg-white w-full text-base" 
-                />
+                <Input value={passengerEmail} onChange={e => setPassengerEmail(e.target.value)} placeholder="Enter your email address" className="h-12 border-gray-200 rounded-xl bg-white w-full text-base" />
               </div>
-            </div>
-          )}
+            </div>}
 
           {/* Book Button */}
           <div className="flex justify-center mt-8">
