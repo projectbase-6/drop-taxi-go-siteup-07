@@ -308,7 +308,8 @@ const sendEmailNotification = async (resendApiKey: string, adminEmail: string, b
             </div>
             
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-              <p style="color: #64748b; margin: 0 0 10px 0; font-size: 14px;">For Questions Contact: <strong>7305305111</strong></p>
+              <p style="color: #64748b; margin: 0 0 10px 0; font-size: 14px;">Thank you for choosing droptaxigo</p>
+              <p style="color: #64748b; margin: 0 0 10px 0; font-size: 14px;">For Questions Contact: <strong>7305305111</strong> or visit our site <strong>droptaxigo.com/ droptaxigo.in</strong></p>
               <p style="color: #64748b; margin: 0; font-size: 14px;">This notification was automatically generated for booking ID: ${booking.id.substring(0, 10).toUpperCase()}</p>
             </div>
           </div>
@@ -396,6 +397,9 @@ serve(async (req) => {
 💰 <b>Estimated Fare:</b> ₹${booking.estimated_fare}
 
 Please confirm and assign a driver.
+
+Thank you for choosing droptaxigo
+For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.in
     `.trim();
 
     // WhatsApp message for admin
@@ -418,6 +422,9 @@ Please confirm and assign a driver.
 💰 *Fare:* ₹${booking.estimated_fare}
 
 ✅ *Action Required:* Please assign driver and confirm booking.
+
+Thank you for choosing droptaxigo
+For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.in
     `.trim();
 
     // SMS confirmation message for passenger (plain text, no markdown)
@@ -436,9 +443,10 @@ Time: ${booking.pickup_time}
 Vehicle: ${booking.vehicle_type.toUpperCase()}
 Estimated Fare: Rs.${booking.estimated_fare}
 
-You'll receive driver details shortly. For support, contact us at +91 7305305111
+You'll receive driver details shortly.
 
-Thank you for choosing our service!
+Thank you for choosing droptaxigo
+For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.in
     `.trim();
 
     const results = {
@@ -605,8 +613,8 @@ Thank you for choosing our service!
               </div>
               
               <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
-                <p style="color: #64748b; margin: 0 0 10px 0; font-size: 14px;">Need Help? Call us at <strong>+91 7305305111</strong></p>
-                <p style="color: #64748b; margin: 0; font-size: 14px;">Thank you for choosing droptaxigo!</p>
+                <p style="color: #64748b; margin: 0 0 10px 0; font-size: 14px;">Thank you for choosing droptaxigo!</p>
+                <p style="color: #64748b; margin: 0; font-size: 14px;">Need Help? Call us at <strong>+91 7305305111</strong> or visit <strong>droptaxigo.com/ droptaxigo.in</strong></p>
               </div>
             </div>
           </body>
