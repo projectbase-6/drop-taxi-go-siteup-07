@@ -597,7 +597,7 @@ const EnhancedBookingForm = () => {
                     <PopoverTrigger asChild>
                       <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !pickupTime && "text-muted-foreground hover:text-black")}>
                         <Clock className="mr-3 h-5 w-5 text-primary" />
-                        {pickupTime || <span>Select start time</span>}
+                        {pickupTime || <span>Select time</span>}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-4" align="start">
