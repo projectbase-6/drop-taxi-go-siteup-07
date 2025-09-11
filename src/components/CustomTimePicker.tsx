@@ -62,8 +62,8 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
         <Button variant="ghost" className={cn("h-auto w-full justify-start text-left font-normal p-0 hover:bg-transparent", className)}>
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-gray-600" />
-            <div className="text-xl font-bold text-gray-900 rounded-none">
-              {time || 'Select'}
+            <div className="text-muted-foreground">
+              {time || 'Select time'}
             </div>
           </div>
         </Button>
