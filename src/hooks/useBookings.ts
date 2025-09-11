@@ -49,6 +49,8 @@ export const useCreateBooking = () => {
 
   return useMutation({
     mutationFn: async (booking: Omit<Booking, 'id' | 'created_at' | 'updated_at'>) => {
+      console.log('Creating booking:', booking);
+      
       const { data, error } = await supabase
         .from('bookings')
         .insert([booking])
@@ -57,8 +59,29 @@ export const useCreateBooking = () => {
 
       if (error) throw error;
       
-      // The notification is now sent automatically by the BookingNotifications component
-      // via real-time subscription, so we don't need to manually call it here
+      console.log('Booking created successfully:', data);
+      
+      // Directly call the notification function to ensure immediate delivery
+      try {
+        const notificationResult = await supabase.functions.invoke('send-booking-notification', {
+          body: {
+            ...data,
+            vehicle_type: data.vehicle_type || 'sedan',
+            trip_type: data.trip_type || 'one-way',
+            distance_km: data.distance_km || 0,
+            duration_minutes: data.duration_minutes || 0
+          },
+        });
+        
+        if (notificationResult.error) {
+          console.error('Notification sending failed:', notificationResult.error);
+        } else {
+          console.log('Notification sent successfully:', notificationResult.data);
+        }
+      } catch (notificationError) {
+        console.error('Error sending notification:', notificationError);
+      }
+      
       return data;
     },
     onSuccess: () => {

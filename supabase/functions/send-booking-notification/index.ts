@@ -5,6 +5,37 @@ import { Resend } from "npm:resend@2.0.0";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+// Retry configuration
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 1000; // 1 second
+
+async function delay(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function retryAsync<T>(
+  fn: () => Promise<T>, 
+  maxRetries: number = MAX_RETRIES, 
+  retryDelay: number = RETRY_DELAY
+): Promise<T> {
+  let lastError;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      console.log(`Attempt ${attempt} failed:`, error);
+      lastError = error;
+      
+      if (attempt < maxRetries) {
+        await delay(retryDelay * attempt); // Exponential backoff
+      }
+    }
+  }
+  
+  throw lastError;
 }
 
 interface BookingData {
@@ -192,6 +223,10 @@ const sendSMSMessage = async (accountSid: string, authToken: string, fromNumber:
 };
 
 const sendEmailNotification = async (resendApiKey: string, adminEmail: string, booking: BookingData) => {
+  console.log('Attempting to send admin email notification...');
+  console.log('Admin Email:', adminEmail);
+  console.log('Passenger Email:', booking.passenger_email);
+  
   try {
     const resend = new Resend(resendApiKey);
     
@@ -317,29 +352,109 @@ const sendEmailNotification = async (resendApiKey: string, adminEmail: string, b
       </html>
     `;
 
-    // Validate and get FROM_EMAIL with safe fallback
-    let FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Drop Taxi Go <onboarding@resend.dev>';
-    
-    // Basic validation for email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$|^.+\s*<[^\s@]+@[^\s@]+\.[^\s@]+>$/;
-    if (FROM_EMAIL && !emailRegex.test(FROM_EMAIL)) {
-      console.warn('FROM_EMAIL has invalid format, using fallback:', FROM_EMAIL);
-      FROM_EMAIL = 'Drop Taxi Go <onboarding@resend.dev>';
-    }
-    
-    const result = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [adminEmail],
-      subject: `🚖 New Booking Alert - ${booking.passenger_name} | ${booking.pickup_location}`,
-      html: emailHtml,
+    // Send admin notification email with retry logic
+    const adminEmailResult = await retryAsync(async () => {
+      return await resend.emails.send({
+        from: 'Drop Taxi Go <noreply@droptaxigo.com>',
+        to: [adminEmail],
+        subject: `🚖 New Booking Alert - ${booking.passenger_name} | ${booking.pickup_location}`,
+        html: emailHtml,
+      });
     });
 
-    if (result.error) {
-      console.error('Admin email send failed:', result.error);
+    if (adminEmailResult.error) {
+      console.error('Admin email send failed:', adminEmailResult.error);
       return false;
     }
     
-    console.log('Admin email sent successfully:', result.data?.id);
+    console.log('Admin email sent successfully:', adminEmailResult.data?.id);
+    // Send passenger confirmation email if email provided with retry logic
+    if (booking.passenger_email && booking.passenger_email.trim() !== '') {
+      console.log('Sending passenger confirmation email to:', booking.passenger_email);
+      
+      const passengerEmailResult = await retryAsync(async () => {
+        return await resend.emails.send({
+          from: 'Drop Taxi Go <noreply@droptaxigo.com>',
+          to: [booking.passenger_email],
+          subject: `✅ Booking Confirmed - ${booking.id.substring(0, 8).toUpperCase()} | droptaxigo`,
+          html: `
+            <html>
+              <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+                <div style="max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                  <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: #2563eb; margin: 0; font-size: 24px;">🚖 Booking Confirmed!</h1>
+                    <p style="color: #64748b; margin: 10px 0 0 0;">droptaxigo - Your Trusted Travel Partner</p>
+                  </div>
+                  
+                  <div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 6px; padding: 20px; margin-bottom: 20px;">
+                    <p style="margin: 0; color: #166534; font-weight: bold; font-size: 16px;">Dear ${booking.passenger_name},</p>
+                    <p style="margin: 10px 0 0 0; color: #16a34a;">Your ride has been successfully booked! We'll assign a driver and share the details with you shortly.</p>
+                  </div>
+                  
+                  <div style="background-color: #f8fafc; padding: 20px; border-radius: 6px; margin-bottom: 20px;">
+                    <h2 style="color: #1e293b; margin: 0 0 15px 0; font-size: 18px;">Your Booking Details</h2>
+                    <table style="width: 100%; border-collapse: collapse;">
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Booking ID:</td>
+                        <td style="padding: 8px 0; color: #1e293b;">${booking.id.substring(0, 10).toUpperCase()}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Pickup Location:</td>
+                        <td style="padding: 8px 0; color: #1e293b;">${booking.pickup_location}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Drop Location:</td>
+                        <td style="padding: 8px 0; color: #1e293b;">${booking.destination}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Date & Time:</td>
+                        <td style="padding: 8px 0; color: #1e293b;">${formatDate(booking.pickup_date)} ${formatTime(booking.pickup_time)}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Vehicle Type:</td>
+                        <td style="padding: 8px 0; color: #1e293b;">${booking.vehicle_type.toUpperCase()}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Trip Type:</td>
+                        <td style="padding: 8px 0; color: #1e293b;">${booking.trip_type === 'oneway' ? 'One Way' : booking.trip_type === 'roundtrip' ? 'Round Trip' : booking.trip_type}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 8px 0; font-weight: bold; color: #475569;">Estimated Fare:</td>
+                        <td style="padding: 8px 0; color: #059669; font-weight: bold;">₹ ${booking.estimated_fare}.00</td>
+                      </tr>
+                    </table>
+                  </div>
+                  
+                  <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
+                    <p style="margin: 0; color: #92400e; font-weight: bold;">📞 What's Next?</p>
+                    <p style="margin: 5px 0 0 0; color: #92400e;">We'll call you shortly to confirm the driver details. For any queries, contact us at +91 7305305111</p>
+                  </div>
+                  
+                  <div style="background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 15px; margin-bottom: 20px;">
+                    <p style="margin: 0; color: #856404; font-weight: bold;">ℹ️ Important Notes:</p>
+                    <p style="margin: 5px 0 0 0; color: #856404;">• Toll charges, permits, and hill station charges are extra<br>• Please be ready 10 minutes before pickup time<br>• Cash and digital payments accepted</p>
+                  </div>
+                  
+                  <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0;">
+                    <p style="color: #64748b; margin: 0 0 10px 0; font-size: 14px;">Thank you for choosing droptaxigo!</p>
+                    <p style="color: #64748b; margin: 0; font-size: 14px;">Need Help? Call us at <strong>+91 7305305111</strong> or visit <strong>droptaxigo.com/ droptaxigo.in</strong></p>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `,
+        });
+      });
+      
+      if (passengerEmailResult.error) {
+        console.error('Passenger email send failed:', passengerEmailResult.error);
+      } else {
+        console.log('Passenger email sent successfully:', passengerEmailResult.data?.id);
+      }
+    } else {
+      console.log('No passenger email provided or email is empty');
+    }
+
     return true;
   } catch (error) {
     console.error('Error sending email notification:', error);
@@ -621,21 +736,13 @@ For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.i
         </html>
       `;
 
-      const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Drop Taxi Go <onboarding@resend.dev>';
-      
-      // Basic validation for email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$|^.+\s*<[^\s@]+@[^\s@]+\.[^\s@]+>$/;
-      let validatedFromEmail = FROM_EMAIL;
-      if (FROM_EMAIL && !emailRegex.test(FROM_EMAIL)) {
-        console.warn('FROM_EMAIL has invalid format, using fallback:', FROM_EMAIL);
-        validatedFromEmail = 'Drop Taxi Go <onboarding@resend.dev>';
-      }
-      
-      const passengerEmailResponse = await resend.emails.send({
-        from: validatedFromEmail,
-        to: [booking.passenger_email],
-        subject: `🚖 Booking Confirmed - ${booking.id.substring(0, 8).toUpperCase()} | droptaxigo`,
-        html: passengerEmailHtml,
+      const passengerEmailResponse = await retryAsync(async () => {
+        return await resend.emails.send({
+          from: 'Drop Taxi Go <noreply@droptaxigo.com>',
+          to: [booking.passenger_email],
+          subject: `🚖 Booking Confirmed - ${booking.id.substring(0, 8).toUpperCase()} | droptaxigo`,
+          html: passengerEmailHtml,
+        });
       });
 
       if (passengerEmailResponse.error) {

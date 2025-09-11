@@ -32,6 +32,8 @@ import CorporateQuote from "./pages/CorporateQuote";
 import OutstationTrips from "./pages/OutstationTrips";
 import { AdminProvider } from "./contexts/AdminContext";
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
+import BookingNotifications from "./components/BookingNotifications";
+import BookingStatusUpdater from "./components/BookingStatusUpdater";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +104,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <BookingNotifications />
+          <BookingStatusUpdater />
           <AppContent />
         </BrowserRouter>
       </TooltipProvider>
