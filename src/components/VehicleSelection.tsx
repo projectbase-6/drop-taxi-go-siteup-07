@@ -33,16 +33,8 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
       return 0;
     }
 
-    // Use vehicle-specific tariff rates with correct calculation for roundtrip
-    const baseRate = tripType === 'roundtrip' ? vehicle.round_trip_rate_per_km || 12 : vehicle.drop_trip_rate_per_km || 14;
-    const totalDistance = tripType === 'roundtrip' ? distance * 2 : distance;
-    const baseFare = totalDistance * baseRate;
-    const categoryMultiplier = vehicle.category?.base_multiplier || 1;
-    const vehicleMultiplier = vehicle.price_multiplier || 1;
-    const totalMultiplier = categoryMultiplier * vehicleMultiplier;
-
-    // Add driver bata of Rs 400
-    return Math.round(baseFare * totalMultiplier + 400);
+    // Use the new tiered pricing calculation
+    return calculateFare(distance, 0, tripType, vehicle.name);
   };
   const getVehicleIcon = (type: string) => {
     switch (type.toLowerCase()) {

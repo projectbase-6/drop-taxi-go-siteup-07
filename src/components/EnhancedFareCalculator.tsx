@@ -23,6 +23,39 @@ const EnhancedFareCalculator: React.FC<EnhancedFareCalculatorProps> = ({
   const fare = calculateFare(distance, duration, tripType);
   const rates = getTariffRates();
 
+  const getDistanceCharge = (distance: number, tripType: string, rates: any) => {
+    if (tripType === 'roundtrip') {
+      const minDistance = 250;
+      const effectiveDistance = Math.max(distance * 2, minDistance);
+      return (effectiveDistance * rates.roundTripRate).toFixed(2);
+    }
+    
+    // One-way tiered pricing
+    if (distance <= 20) {
+      return (20 * rates.dropTripRate).toFixed(2);
+    } else if (distance <= 135) {
+      return (135 * rates.dropTripRate).toFixed(2);
+    } else {
+      return (distance * rates.dropTripRate).toFixed(2);
+    }
+  };
+
+  const getDistanceLabel = (distance: number, tripType: string) => {
+    if (tripType === 'roundtrip') {
+      const minDistance = 250;
+      const effectiveDistance = Math.max(distance * 2, minDistance);
+      return `Distance (${effectiveDistance} km min)`;
+    }
+    
+    if (distance <= 20) {
+      return `Distance (${distance} km, min 20 km)`;
+    } else if (distance <= 135) {
+      return `Distance (${distance} km, charged 135 km)`;
+    } else {
+      return `Distance (${distance} km)`;
+    }
+  };
+
   React.useEffect(() => {
     if (onFareCalculated && fare > 0) {
       onFareCalculated(fare);
@@ -58,10 +91,10 @@ const EnhancedFareCalculator: React.FC<EnhancedFareCalculatorProps> = ({
           </div>
           <div className="flex justify-between">
             <span className="text-golden-dark/70">
-              Distance ({distance} km)
+              {getDistanceLabel(distance, tripType)}
             </span>
             <span className="font-medium text-golden-dark">
-              ₹{(distance * (tripType === 'roundtrip' ? 2 : 1) * (tripType === 'roundtrip' ? rates.roundTripRate : rates.dropTripRate)).toFixed(2)}
+              ₹{getDistanceCharge(distance, tripType, rates)}
             </span>
           </div>
           {duration > 0 && (

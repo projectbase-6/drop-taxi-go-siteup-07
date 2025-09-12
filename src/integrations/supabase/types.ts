@@ -227,6 +227,8 @@ export type Database = {
           drop_trip_rate_per_km: number | null
           id: string
           is_active: boolean
+          min_135km_fare: number | null
+          min_20km_fare: number | null
           name: string
           per_minute_rate: number | null
           price_multiplier: number
@@ -241,6 +243,8 @@ export type Database = {
           drop_trip_rate_per_km?: number | null
           id?: string
           is_active?: boolean
+          min_135km_fare?: number | null
+          min_20km_fare?: number | null
           name: string
           per_minute_rate?: number | null
           price_multiplier?: number
@@ -255,6 +259,8 @@ export type Database = {
           drop_trip_rate_per_km?: number | null
           id?: string
           is_active?: boolean
+          min_135km_fare?: number | null
+          min_20km_fare?: number | null
           name?: string
           per_minute_rate?: number | null
           price_multiplier?: number

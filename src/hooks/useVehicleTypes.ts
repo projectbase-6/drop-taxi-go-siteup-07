@@ -21,6 +21,8 @@ export interface VehicleType {
   per_minute_rate?: number;
   drop_trip_rate_per_km?: number;
   round_trip_rate_per_km?: number;
+  min_20km_fare?: number;
+  min_135km_fare?: number;
   created_at: string;
   updated_at: string;
 }

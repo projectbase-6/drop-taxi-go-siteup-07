@@ -13,38 +13,57 @@ export const useFareCalculation = () => {
     vehicleTypeName?: string,
     numberOfDays: number = 1
   ) => {
-    // Try to find vehicle-specific tariff first
+    // Implement tiered pricing model
     const vehicleType = vehicleTypeName ? 
       vehicleTypes?.find(v => v.name.toLowerCase() === vehicleTypeName.toLowerCase()) : null;
     
-    // If vehicle type is found, use its specific rate per km
     if (vehicleType) {
-      const perKmRate = tripType === 'roundtrip' 
-        ? vehicleType.round_trip_rate_per_km || 12
-        : vehicleType.drop_trip_rate_per_km || 14;
+      // For round trips, minimum 250km coverage
+      if (tripType === 'roundtrip') {
+        const minDistance = 250;
+        const effectiveDistance = Math.max(distance * 2, minDistance);
+        const perKmRate = vehicleType.round_trip_rate_per_km || 12;
+        return Math.round(effectiveDistance * perKmRate + 400);
+      }
       
-      // For roundtrip, calculate total distance (distance * 2) * rate
-      const totalDistance = tripType === 'roundtrip' ? distance * 2 : distance;
-      const baseFare = totalDistance * perKmRate;
+      // For one-way trips, implement tiered pricing:
+      // ≤20km: Use minimum fare
+      // 21-135km: Charge for 135km
+      // >135km: Charge actual distance
       
-      // Add driver bata of Rs 400
-      return Math.round(baseFare + 400);
+      if (distance <= 20) {
+        // Use minimum fare for distances ≤20km
+        return Math.round(vehicleType.min_20km_fare || 680);
+      } else if (distance <= 135) {
+        // Charge for 135km for distances 21-135km
+        const perKmRate = vehicleType.drop_trip_rate_per_km || 14;
+        return Math.round(135 * perKmRate + 400);
+      } else {
+        // Charge actual distance for distances >135km
+        const perKmRate = vehicleType.drop_trip_rate_per_km || 14;
+        return Math.round(distance * perKmRate + 400);
+      }
     }
     
-    // Fallback to general tariff
-    const baseFare = Number(tariff?.base_fare) || 0;
+    // Fallback to general tariff with tiered pricing
     const perKmRate = tripType === 'roundtrip' 
       ? (Number(tariff?.round_trip_rate_per_km) || 12)
       : (Number(tariff?.drop_trip_rate_per_km) || 14);
-    const perMinuteRate = Number(tariff?.per_minute_rate) || 0;
     
-    // For roundtrip with general tariff, also multiply distance by 2
-    const totalDistance = tripType === 'roundtrip' ? distance * 2 : distance;
-    const distanceCost = totalDistance * perKmRate;
-    const timeCost = duration * perMinuteRate;
+    if (tripType === 'roundtrip') {
+      const minDistance = 250;
+      const effectiveDistance = Math.max(distance * 2, minDistance);
+      return Math.round(effectiveDistance * perKmRate + 400);
+    }
     
-    // Add driver bata of Rs 400
-    return Math.round(baseFare + distanceCost + timeCost + 400);
+    // One-way fallback with tiered pricing
+    if (distance <= 20) {
+      return Math.round(20 * perKmRate + 400);
+    } else if (distance <= 135) {
+      return Math.round(135 * perKmRate + 400);
+    } else {
+      return Math.round(distance * perKmRate + 400);
+    }
   };
 
   const getTariffRates = (vehicleTypeName?: string) => {
