@@ -64,7 +64,24 @@ const ContactWithForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.fullName || !formData.email || !formData.subject || !formData.message) {
+    // Trim whitespace from form fields
+    const trimmedData = {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      subject: formData.subject.trim(),
+      message: formData.message.trim(),
+    };
+
+    console.log("Form data before validation:", trimmedData);
+    
+    if (!trimmedData.fullName || !trimmedData.email || !trimmedData.subject || !trimmedData.message) {
+      console.log("Validation failed - missing fields:", {
+        fullName: !trimmedData.fullName,
+        email: !trimmedData.email,
+        subject: !trimmedData.subject,
+        message: !trimmedData.message
+      });
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -78,11 +95,11 @@ const ContactWithForm = () => {
     try {
       // Create the query
       const result = await createQuery.mutateAsync({
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone || undefined,
-        subject: formData.subject,
-        message: formData.message,
+        full_name: trimmedData.fullName,
+        email: trimmedData.email,
+        phone: trimmedData.phone || undefined,
+        subject: trimmedData.subject,
+        message: trimmedData.message,
       });
 
       // Send email notification
@@ -91,11 +108,11 @@ const ContactWithForm = () => {
       const { data, error } = await supabase.functions.invoke('send-enquiry-notification', {
         body: {
           enquiryId: result.id,
-          fullName: formData.fullName,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
+          fullName: trimmedData.fullName,
+          email: trimmedData.email,
+          phone: trimmedData.phone,
+          subject: trimmedData.subject,
+          message: trimmedData.message,
           createdAt: result.created_at,
         }
       });
