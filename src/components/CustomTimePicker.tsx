@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -31,15 +31,16 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
     length: 12
   }, (_, i) => String(i * 5).padStart(2, '0'));
   const periods = ['AM', 'PM'];
-  const handleTimeSelection = (hour?: string, minute?: string, period?: string) => {
-    const finalHour = hour || selectedHour;
-    const finalMinute = minute || selectedMinute;
-    const finalPeriod = period || selectedPeriod;
-    
-    const timeValue = `${finalHour}:${finalMinute} ${finalPeriod}`;
-    onChange(timeValue);
-    setIsOpen(false);
-  };
+  
+  // Auto-close dialog and submit when all values are selected after user interaction
+  useEffect(() => {
+    // Only auto-submit if dialog is open and we have all valid selections
+    if (isOpen && selectedHour && selectedMinute && selectedPeriod) {
+      const timeValue = `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
+      onChange(timeValue);
+      setIsOpen(false);
+    }
+  }, [selectedHour, selectedMinute, selectedPeriod, isOpen, onChange]);
   const formatDisplayTime = () => {
     if (value) {
       const [time, period] = value.split(' ');
@@ -88,10 +89,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               <div className="text-center text-sm text-gray-600 mb-2">Hr</div>
               <div className="relative">
                 <ScrollArea className="h-32 border rounded-lg">
-                  {hours.map(hour => <div key={hour} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedHour === hour ? 'bg-blue-500 text-white' : ''}`} onClick={() => {
-                      setSelectedHour(hour);
-                      handleTimeSelection(hour, selectedMinute, selectedPeriod);
-                    }}>
+                  {hours.map(hour => <div key={hour} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedHour === hour ? 'bg-blue-500 text-white' : ''}`} onClick={() => setSelectedHour(hour)}>
                       {hour}
                     </div>)}
                 </ScrollArea>
@@ -107,10 +105,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               <div className="text-center text-sm text-gray-600 mb-2">Min</div>
               <div className="relative">
                 <ScrollArea className="h-32 border rounded-lg">
-                  {minutes.map(minute => <div key={minute} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedMinute === minute ? 'bg-blue-500 text-white' : ''}`} onClick={() => {
-                      setSelectedMinute(minute);
-                      handleTimeSelection(selectedHour, minute, selectedPeriod);
-                    }}>
+                  {minutes.map(minute => <div key={minute} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedMinute === minute ? 'bg-blue-500 text-white' : ''}`} onClick={() => setSelectedMinute(minute)}>
                       {minute} min
                     </div>)}
                 </ScrollArea>
@@ -125,10 +120,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
             <div className="flex-1 min-w-0">
               <div className="text-center text-sm text-gray-600 mb-2">AM/PM</div>
               <div className="space-y-2">
-                {periods.map(p => <div key={p} className={`p-2 sm:p-3 text-center cursor-pointer rounded border text-sm ${selectedPeriod === p ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`} onClick={() => {
-                    setSelectedPeriod(p);
-                    handleTimeSelection(selectedHour, selectedMinute, p);
-                  }}>
+                {periods.map(p => <div key={p} className={`p-2 sm:p-3 text-center cursor-pointer rounded border text-sm ${selectedPeriod === p ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`} onClick={() => setSelectedPeriod(p)}>
                     {p}
                   </div>)}
               </div>
