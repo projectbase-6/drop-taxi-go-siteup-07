@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChevronUp, ChevronDown, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -17,9 +17,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   className
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedHour, setSelectedHour] = useState('10');
-  const [selectedMinute, setSelectedMinute] = useState('00');
-  const [selectedPeriod, setSelectedPeriod] = useState('AM');
+  const [selectedHour, setSelectedHour] = useState('');
+  const [selectedMinute, setSelectedMinute] = useState('');
+  const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
 
   // Generate hours (01-12)
   const hours = Array.from({
@@ -34,13 +35,14 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   
   // Auto-close dialog and submit when all values are selected after user interaction
   useEffect(() => {
-    // Only auto-submit if dialog is open and we have all valid selections
-    if (isOpen && selectedHour && selectedMinute && selectedPeriod) {
+    // Only auto-submit if dialog is open, we have all valid selections, and user has interacted
+    if (isOpen && hasUserInteracted && selectedHour && selectedMinute && selectedPeriod) {
       const timeValue = `${selectedHour}:${selectedMinute} ${selectedPeriod}`;
       onChange(timeValue);
       setIsOpen(false);
+      setHasUserInteracted(false); // Reset for next time
     }
-  }, [selectedHour, selectedMinute, selectedPeriod, isOpen, onChange]);
+  }, [selectedHour, selectedMinute, selectedPeriod, isOpen, hasUserInteracted, onChange]);
   const formatDisplayTime = () => {
     if (value) {
       const [time, period] = value.split(' ');
@@ -70,6 +72,8 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
+        <DialogTitle className="sr-only">Select Time</DialogTitle>
+        <DialogDescription className="sr-only">Choose hour, minute, and AM/PM for your pickup time</DialogDescription>
         <div className="bg-white rounded-lg p-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">Pickup-Time</h3>
@@ -78,7 +82,9 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
           
           <div className="flex items-center gap-2 mb-6">
             <div className="text-2xl font-bold text-blue-600">
-              {selectedHour}:{selectedMinute} {selectedPeriod}
+              {selectedHour && selectedMinute && selectedPeriod 
+                ? `${selectedHour}:${selectedMinute} ${selectedPeriod}` 
+                : 'Select time'}
             </div>
             
           </div>
@@ -89,7 +95,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               <div className="text-center text-sm text-gray-600 mb-2">Hr</div>
               <div className="relative">
                 <ScrollArea className="h-32 border rounded-lg">
-                  {hours.map(hour => <div key={hour} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedHour === hour ? 'bg-blue-500 text-white' : ''}`} onClick={() => setSelectedHour(hour)}>
+                  {hours.map(hour => <div key={hour} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedHour === hour ? 'bg-blue-500 text-white' : ''}`} onClick={() => {
+                      setSelectedHour(hour);
+                      setHasUserInteracted(true);
+                    }}>
                       {hour}
                     </div>)}
                 </ScrollArea>
@@ -105,7 +114,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               <div className="text-center text-sm text-gray-600 mb-2">Min</div>
               <div className="relative">
                 <ScrollArea className="h-32 border rounded-lg">
-                  {minutes.map(minute => <div key={minute} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedMinute === minute ? 'bg-blue-500 text-white' : ''}`} onClick={() => setSelectedMinute(minute)}>
+                  {minutes.map(minute => <div key={minute} className={`p-2 text-center cursor-pointer hover:bg-gray-100 text-sm ${selectedMinute === minute ? 'bg-blue-500 text-white' : ''}`} onClick={() => {
+                      setSelectedMinute(minute);
+                      setHasUserInteracted(true);
+                    }}>
                       {minute} min
                     </div>)}
                 </ScrollArea>
@@ -120,7 +132,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
             <div className="flex-1 min-w-0">
               <div className="text-center text-sm text-gray-600 mb-2">AM/PM</div>
               <div className="space-y-2">
-                {periods.map(p => <div key={p} className={`p-2 sm:p-3 text-center cursor-pointer rounded border text-sm ${selectedPeriod === p ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`} onClick={() => setSelectedPeriod(p)}>
+                {periods.map(p => <div key={p} className={`p-2 sm:p-3 text-center cursor-pointer rounded border text-sm ${selectedPeriod === p ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`} onClick={() => {
+                    setSelectedPeriod(p);
+                    setHasUserInteracted(true);
+                  }}>
                     {p}
                   </div>)}
               </div>
