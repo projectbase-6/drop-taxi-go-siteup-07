@@ -93,6 +93,8 @@ const ContactWithForm = () => {
     setIsSubmitting(true);
 
     try {
+      console.log("Attempting to create query with data:", trimmedData);
+      
       // Create the query
       const result = await createQuery.mutateAsync({
         full_name: trimmedData.fullName,
@@ -102,33 +104,46 @@ const ContactWithForm = () => {
         message: trimmedData.message,
       });
 
-      // Send email notification
-      console.log("Sending email notification for enquiry:", result);
-      
-      const { data, error } = await supabase.functions.invoke('send-enquiry-notification', {
-        body: {
-          enquiryId: result.id,
-          fullName: trimmedData.fullName,
-          email: trimmedData.email,
-          phone: trimmedData.phone,
-          subject: trimmedData.subject,
-          message: trimmedData.message,
-          createdAt: result.created_at,
-        }
-      });
+      console.log("Query created successfully:", result);
 
-      if (error) {
-        console.error("Error sending email notification:", error);
-        // Don't fail the submission if email fails
-        toast({
-          title: "Success",
-          description: "Your message has been sent successfully! We'll contact you soon.",
+      // Send email notification
+      console.log("Sending email notification for enquiry:", result.id);
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('send-enquiry-notification', {
+          body: {
+            enquiryId: result.id,
+            fullName: trimmedData.fullName,
+            email: trimmedData.email,
+            phone: trimmedData.phone,
+            subject: trimmedData.subject,
+            message: trimmedData.message,
+            createdAt: result.created_at,
+          }
         });
-      } else {
-        console.log("Email notification sent successfully:", data);
+
+        if (error) {
+          console.error("Error sending notification email:", error);
+          // Don't throw error here - query was saved successfully
+          toast({
+            title: "Query Submitted",
+            description: "Your message has been submitted successfully to our admin team! We'll get back to you soon.",
+          });
+        } else {
+          console.log("Email notification sent successfully:", data);
+          toast({
+            title: "Success!",
+            description: data?.enquiryRef 
+              ? `Your enquiry has been received! Reference: ${data.enquiryRef}. Both you and our admin team have been notified via email.`
+              : "Your message has been submitted successfully and both you and our admin team have been notified via email!",
+          });
+        }
+      } catch (emailError) {
+        console.error("Email function error:", emailError);
+        // Still show success since query was saved
         toast({
-          title: "Success",
-          description: `Your enquiry has been received! Reference: ${data.enquiryRef}`,
+          title: "Query Submitted",
+          description: "Your message has been submitted successfully to our admin team! We'll get back to you soon.",
         });
       }
 
@@ -140,13 +155,30 @@ const ContactWithForm = () => {
         subject: "",
         message: "",
       });
+
     } catch (error: any) {
-      console.error("Error submitting form:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send your message. Please try again.",
-        variant: "destructive",
-      });
+      console.error("Error submitting query:", error);
+      
+      // More specific error messages
+      if (error?.message?.includes('row-level security') || error?.message?.includes('RLS')) {
+        toast({
+          title: "Database Error",
+          description: "There was a permissions issue saving your query. Please contact support at +91 7305305111.",
+          variant: "destructive",
+        });
+      } else if (error?.message?.includes('network') || error?.message?.includes('fetch')) {
+        toast({
+          title: "Network Error", 
+          description: "Please check your internet connection and try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to send your message. Please try again or call us at +91 7305305111.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
