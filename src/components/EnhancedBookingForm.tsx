@@ -474,7 +474,9 @@ const EnhancedBookingForm = () => {
                         {pickupTime || <span>Select time</span>}
                       </Button>
                     </PopoverTrigger>
-                    
+                    <PopoverContent className="w-auto p-4" align="start">
+                      <CustomTimePicker value={pickupTime} onChange={setPickupTime} placeholder="Select time" className="w-full" />
+                    </PopoverContent>
                   </Popover>
                 </div>
 
