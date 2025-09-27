@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Car, MapPin, Clock, Phone, MessageCircle, ArrowLeft } from 'lucide-react';
 import { useDistanceCalculation } from '@/hooks/useDistanceCalculation';
+import { useFareCalculation } from '@/hooks/useFareCalculation';
 
 const BookingConfirmation: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -14,6 +15,7 @@ const BookingConfirmation: React.FC = () => {
   const [introPos, setIntroPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [introAnimating, setIntroAnimating] = useState(false);
   const [highlightReceipt, setHighlightReceipt] = useState(false);
+  const { calculateDuration, calculateDaysBetween } = useFareCalculation();
 
   // Extract booking details from URL parameters
   const bookingDetails = {
@@ -28,7 +30,8 @@ const BookingConfirmation: React.FC = () => {
     estimated_fare: Number(searchParams.get('fare')) || 0,
     vehicle_type: searchParams.get('vehicle') || '',
     distance_km: Number(searchParams.get('distance')) || 0,
-    trip_type: searchParams.get('tripType') || 'one-way'
+    trip_type: searchParams.get('tripType') || 'one-way',
+    return_date: searchParams.get('returnDate') || ''
   };
 
   // Calculate distance and duration
@@ -37,17 +40,24 @@ const BookingConfirmation: React.FC = () => {
 
   // Calculate trip duration when component mounts
   useEffect(() => {
+    // For multi-day trips, calculate based on dates
+    if (bookingDetails.return_date && (bookingDetails.trip_type === 'round-trip' || bookingDetails.trip_type === 'hourly')) {
+      const duration = calculateDuration(
+        bookingDetails.pickup_date,
+        bookingDetails.return_date,
+        0
+      );
+      setTripDuration(duration);
+      return;
+    }
+    
+    // For single day trips, calculate based on distance
     if (bookingDetails.pickup_location && bookingDetails.destination) {
       calculateDistance(bookingDetails.pickup_location, bookingDetails.destination)
         .then((result) => {
           if (result.status === 'success' && result.duration > 0) {
-            const hours = Math.floor(result.duration / 60);
-            const minutes = result.duration % 60;
-            if (hours > 0) {
-              setTripDuration(`${hours}h ${minutes}m`);
-            } else {
-              setTripDuration(`${minutes}m`);
-            }
+            const duration = calculateDuration(undefined, undefined, result.duration);
+            setTripDuration(duration);
           } else {
             setTripDuration('Duration unavailable');
           }
@@ -56,7 +66,7 @@ const BookingConfirmation: React.FC = () => {
           setTripDuration('Duration unavailable');
         });
     }
-  }, [bookingDetails.pickup_location, bookingDetails.destination, calculateDistance]);
+  }, [bookingDetails.pickup_location, bookingDetails.destination, bookingDetails.pickup_date, bookingDetails.return_date, bookingDetails.trip_type, calculateDistance, calculateDuration]);
 
   useEffect(() => {
     if (!receiptBtnRef.current) return;
@@ -96,9 +106,21 @@ const BookingConfirmation: React.FC = () => {
       const formatJourneyType = () => {
         if (bookingDetails.trip_type === 'oneway') return 'One Way';
         if (bookingDetails.trip_type === 'roundtrip') return 'Round Trip';
+        if (bookingDetails.trip_type === 'round-trip') return 'Round Trip';
+        if (bookingDetails.trip_type === 'hourly') return 'Hourly Rental';
         return bookingDetails.trip_type;
       };
 
+      // Calculate driver batta for multi-day trips
+      const calculateDriverBatta = () => {
+        if (bookingDetails.return_date && (bookingDetails.trip_type === 'round-trip' || bookingDetails.trip_type === 'hourly')) {
+          const days = calculateDaysBetween(bookingDetails.pickup_date, bookingDetails.return_date);
+          return 400 * days;
+        }
+        return 400;
+      };
+
+      const driverBatta = calculateDriverBatta();
       const receiptMessage = `🚖 *NEW BOOKING - RECEIPT REQUEST*
 
 📋 *BOOKING DETAILS*
@@ -126,7 +148,7 @@ const BookingConfirmation: React.FC = () => {
 📏 *Trip Distance:* ${bookingDetails.distance_km || 'TBD'} KM
 💵 *Trip Estimation:* ₹${bookingDetails.estimated_fare}.00
 📊 *Extra Per KM:* ₹19.00
-👨‍✈️ *Driver Batta:* ₹400 (included)
+👨‍✈️ *Driver Batta:* ₹${driverBatta} (included)
 🔺 *Above 400 KM:* ₹300 Extra
 
 ⚠️ *ADDITIONAL CHARGES*

@@ -8,11 +8,13 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import EnhancedBookingForm from '@/components/EnhancedBookingForm';
 import MobileBookingForm from '@/components/MobileBookingForm';
 import EnhancedBookingStatus from '@/components/EnhancedBookingStatus';
+import { useFareCalculation } from '@/hooks/useFareCalculation';
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState('book');
   const { data: bookings = [] } = useBookings();
   const isMobile = useIsMobile();
+  const { calculateDuration } = useFareCalculation();
 
   // Get user's recent bookings (mock user filter for demo)
   const userBookings = bookings.slice(0, 5);
@@ -110,7 +112,11 @@ const UserDashboard = () => {
         {/* Book Ride Tab */}
         {activeTab === 'book' && (
           <div className="space-y-6">
-            {isMobile ? <MobileBookingForm /> : <EnhancedBookingForm />}
+            {isMobile ? (
+              <MobileBookingForm />
+            ) : (
+              <EnhancedBookingForm />
+            )}
           </div>
         )}
 

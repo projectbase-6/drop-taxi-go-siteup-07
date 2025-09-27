@@ -11,6 +11,8 @@ interface VehicleSelectionProps {
   onVehicleSelect: (vehicle: any, fare: number) => void;
   selectedVehicleId?: string;
   isCalculatingDistance?: boolean;
+  departureDate?: string;
+  returnDate?: string;
 }
 const VehicleSelection: React.FC<VehicleSelectionProps> = ({
   distance,
@@ -18,14 +20,17 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
   tripType = 'oneway',
   onVehicleSelect,
   selectedVehicleId,
-  isCalculatingDistance = false
+  isCalculatingDistance = false,
+  departureDate,
+  returnDate
 }) => {
   const {
     data: vehicleTypes = [],
     isLoading
   } = useVehicleTypes();
   const {
-    calculateFare
+    calculateFare,
+    calculateDaysBetween
   } = useFareCalculation();
   const calculateVehicleFare = (vehicle: any) => {
     // Return 0 if distance is not available or being calculated
@@ -33,8 +38,14 @@ const VehicleSelection: React.FC<VehicleSelectionProps> = ({
       return 0;
     }
 
+    // Calculate number of days for multi-day trips
+    let numberOfDays = 1;
+    if (departureDate && returnDate && (tripType === 'roundtrip' || tripType === 'hourly')) {
+      numberOfDays = calculateDaysBetween(departureDate, returnDate);
+    }
+
     // Use the new tiered pricing calculation
-    return calculateFare(distance, 0, tripType, vehicle.name);
+    return calculateFare(distance, 0, tripType, vehicle.name, numberOfDays, departureDate, returnDate);
   };
   const getVehicleIcon = (type: string) => {
     switch (type.toLowerCase()) {

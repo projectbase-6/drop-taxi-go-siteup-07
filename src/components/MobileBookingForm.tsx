@@ -18,6 +18,7 @@ import VehicleSelection from './VehicleSelection';
 import BookingSuccess from './BookingSuccess';
 import { useCreateBooking } from '@/hooks/useBookings';
 import { useDistanceCalculation } from '@/hooks/useDistanceCalculation';
+import { useFareCalculation } from '@/hooks/useFareCalculation';
 import { toast } from 'sonner';
 const MobileBookingForm = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const MobileBookingForm = () => {
     result: distanceResult,
     isLoading: isCalculatingDistance
   } = useDistanceCalculation();
+  const { calculateDuration, calculateDaysBetween } = useFareCalculation();
   const [serviceType, setServiceType] = useState('outstation-oneway');
   const [selectedServiceCategory, setSelectedServiceCategory] = useState('city-rides');
   const [fromLocation, setFromLocation] = useState('');
@@ -151,7 +153,21 @@ const MobileBookingForm = () => {
 
   // Calculate estimated duration
   const estimatedDuration = useMemo(() => {
-    return distanceResult.duration || 0;
+    // For multi-day trips, show days instead of minutes
+    if (departureDate && returnDate && (serviceType === 'outstation-roundtrip' || serviceType === 'hourly')) {
+      return calculateDuration(
+        format(departureDate, 'yyyy-MM-dd'),
+        format(returnDate, 'yyyy-MM-dd'),
+        distanceResult.duration
+      );
+    }
+    
+    // For single day trips, show hours and minutes
+    if (distanceResult.duration > 0) {
+      return calculateDuration(undefined, undefined, distanceResult.duration);
+    }
+    
+    return 'Calculating...';
   }, [distanceResult.duration]);
   const dropTime = useMemo(() => {
     if (!pickupTime || !distanceResult.duration) {
@@ -398,7 +414,7 @@ const MobileBookingForm = () => {
                 </div>
                 <div className="text-sm">
                   <span className="font-semibold text-gray-600">Duration:</span>
-                  {isCalculatingDistance ? <span className="ml-1 text-blue-600">Calculating...</span> : estimatedDuration > 0 ? <span className="ml-1 text-blue-600 font-bold">{Math.round(estimatedDuration)} min</span> : <span className="ml-1">-</span>}
+                  {isCalculatingDistance ? <span className="ml-1 text-blue-600">Calculating...</span> : estimatedDuration !== 'Calculating...' ? <span className="ml-1 text-blue-600 font-bold">{estimatedDuration}</span> : <span className="ml-1">-</span>}
                 </div>
               </div>
             </div>}
@@ -577,7 +593,16 @@ const MobileBookingForm = () => {
 
           {/* Vehicle Selection */}
           {showVehicleSelection && <div className="pt-4">
-              <VehicleSelection distance={estimatedDistance} duration={estimatedDuration} tripType={activeTab === 'roundtrip' ? 'roundtrip' : 'oneway'} isCalculatingDistance={isCalculatingDistance} onVehicleSelect={handleVehicleSelect} selectedVehicleId={selectedVehicle?.id} />
+              <VehicleSelection 
+                distance={estimatedDistance} 
+                duration={typeof estimatedDuration === 'string' ? 0 : estimatedDuration} 
+                tripType={activeTab === 'roundtrip' ? 'roundtrip' : 'oneway'} 
+                isCalculatingDistance={isCalculatingDistance} 
+                onVehicleSelect={handleVehicleSelect} 
+                selectedVehicleId={selectedVehicle?.id}
+                departureDate={departureDate ? format(departureDate, 'yyyy-MM-dd') : undefined}
+                returnDate={returnDate ? format(returnDate, 'yyyy-MM-dd') : undefined}
+              />
             </div>}
 
           {/* Estimated Fare & Book Button */}
@@ -587,7 +612,7 @@ const MobileBookingForm = () => {
                   Estimated Fare: ₹{estimatedFare}
                 </h3>
                 <p className="text-gray-600 text-sm">
-                  {selectedVehicle.name} • {serviceType === 'outstation-roundtrip' ? estimatedDistance * 2 : estimatedDistance} km
+                  {selectedVehicle.name} • {serviceType === 'outstation-roundtrip' ? estimatedDistance * 2 : estimatedDistance} km • {estimatedDuration}
                   {dropTime.time && ` • ${dropTime.time} ${dropTime.period} arrival`}
                 </p>
               </div>

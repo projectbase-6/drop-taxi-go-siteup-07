@@ -21,6 +21,7 @@ import BookingSuccess from './BookingSuccess';
 import CustomTimePicker from './CustomTimePicker';
 import { useCreateBooking } from '@/hooks/useBookings';
 import { useDistanceCalculation } from '@/hooks/useDistanceCalculation';
+import { useFareCalculation } from '@/hooks/useFareCalculation';
 import { toast } from 'sonner';
 const EnhancedBookingForm = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const EnhancedBookingForm = () => {
     result: distanceResult,
     isLoading: isCalculatingDistance
   } = useDistanceCalculation();
+  const { calculateDuration, calculateDaysBetween } = useFareCalculation();
 
   // Tab state
   const [activeTab, setActiveTab] = useState('oneway');
@@ -96,6 +98,16 @@ const EnhancedBookingForm = () => {
     return format(date, 'MMM dd, yyyy');
   };
   const formatDuration = (durationInMinutes: number) => {
+    // For multi-day trips, use the calculateDuration function
+    if (activeTab === 'roundtrip' && bookingDate && returnDate) {
+      return calculateDuration(
+        format(bookingDate, 'yyyy-MM-dd'),
+        format(returnDate, 'yyyy-MM-dd'),
+        durationInMinutes
+      );
+    }
+    
+    // For single day trips, use the original logic
     if (durationInMinutes <= 0) return '-';
     const totalHours = Math.floor(durationInMinutes / 60);
     const minutes = Math.round(durationInMinutes % 60);
@@ -645,7 +657,16 @@ const EnhancedBookingForm = () => {
 
           {/* Vehicle Selection */}
           {showVehicleSelection && <div className="mb-6">
-              <VehicleSelection distance={estimatedDistance} duration={distanceResult.duration} tripType={activeTab === 'roundtrip' ? 'roundtrip' : 'oneway'} isCalculatingDistance={isCalculatingDistance} onVehicleSelect={handleVehicleSelect} selectedVehicleId={selectedVehicle?.id} />
+              <VehicleSelection 
+                distance={estimatedDistance} 
+                duration={distanceResult.duration} 
+                tripType={activeTab === 'roundtrip' ? 'roundtrip' : 'oneway'} 
+                isCalculatingDistance={isCalculatingDistance} 
+                onVehicleSelect={handleVehicleSelect} 
+                selectedVehicleId={selectedVehicle?.id}
+                departureDate={bookingDate ? format(bookingDate, 'yyyy-MM-dd') : undefined}
+                returnDate={returnDate ? format(returnDate, 'yyyy-MM-dd') : undefined}
+              />
             </div>}
 
           {/* Estimated Fare & Book Button */}
@@ -655,7 +676,7 @@ const EnhancedBookingForm = () => {
                   Estimated Fare: ₹{estimatedFare}
                 </h3>
                 <p className="text-gray-600">
-                  {selectedVehicle.name} • {estimatedDistance} km • {dropTime.time} {dropTime.period} arrival
+                  {selectedVehicle.name} • {estimatedDistance} km • {formatDuration(distanceResult.duration)} • {dropTime.time} {dropTime.period} arrival
                 </p>
               </div>
               
