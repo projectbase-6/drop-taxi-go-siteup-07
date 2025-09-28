@@ -158,7 +158,7 @@ const MobileBookingForm = () => {
       return calculateDuration(
         format(departureDate, 'yyyy-MM-dd'),
         format(returnDate, 'yyyy-MM-dd'),
-        distanceResult.duration
+        0
       );
     }
     
@@ -168,7 +168,7 @@ const MobileBookingForm = () => {
     }
     
     return 'Calculating...';
-  }, [distanceResult.duration]);
+  }, [distanceResult.duration, departureDate, returnDate, serviceType, calculateDuration]);
   const dropTime = useMemo(() => {
     if (!pickupTime || !distanceResult.duration) {
       return {
@@ -510,29 +510,12 @@ const MobileBookingForm = () => {
               {/* Return Time - Modern Time Picker */}
               <div className="bg-gray-50 rounded-xl p-4">
                 <Label className="text-sm font-medium text-gray-500 mb-2 block">Return Time</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal bg-white hover:bg-accent/50",
-                        !returnTime && "text-muted-foreground"
-                      )}
-                    >
-                      <Clock className="mr-2 h-4 w-4" />
-                      {returnTime || "Select return time"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-4" align="start">
-                    <div className="space-y-3">
-                      <div className="font-medium text-sm">Select Return Time</div>
-                      <CustomTimePicker 
-                        value={returnTime}
-                        onChange={setReturnTime}
-                      />
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                <CustomTimePicker 
+                  value={returnTime}
+                  onChange={setReturnTime}
+                  placeholder="Select return time"
+                  className="w-full justify-start text-left font-normal bg-white hover:bg-accent/50"
+                />
               </div>
             </div>}
 

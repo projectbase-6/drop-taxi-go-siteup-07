@@ -48,18 +48,18 @@ export const useFareCalculation = () => {
       
       // For one-way trips, implement tiered pricing:
       // ≤20km: Use minimum fare
-      // 21-135km: Charge for 135km
-      // >135km: Charge actual distance
+      // 21-130km: Charge for 130km
+      // >130km: Charge actual distance
       
       if (distance <= 20) {
         // Use minimum fare for distances ≤20km
         return Math.round((vehicleType.min_20km_fare || 680) + (actualDays > 1 ? (actualDays - 1) * 400 : 0));
-      } else if (distance <= 135) {
-        // Charge for 135km for distances 21-135km
+      } else if (distance <= 130) {
+        // Charge for 130km for distances 21-130km
         const perKmRate = vehicleType.drop_trip_rate_per_km || 14;
-        return Math.round(135 * perKmRate + driverBatta);
+        return Math.round(130 * perKmRate + driverBatta);
       } else {
-        // Charge actual distance for distances >135km
+        // Charge actual distance for distances >130km
         const perKmRate = vehicleType.drop_trip_rate_per_km || 14;
         return Math.round(distance * perKmRate + driverBatta);
       }
@@ -79,8 +79,8 @@ export const useFareCalculation = () => {
     // One-way fallback with tiered pricing
     if (distance <= 20) {
       return Math.round(20 * perKmRate + driverBatta);
-    } else if (distance <= 135) {
-      return Math.round(135 * perKmRate + driverBatta);
+    } else if (distance <= 130) {
+      return Math.round(130 * perKmRate + driverBatta);
     } else {
       return Math.round(distance * perKmRate + driverBatta);
     }

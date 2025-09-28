@@ -33,8 +33,8 @@ const EnhancedFareCalculator: React.FC<EnhancedFareCalculatorProps> = ({
     // One-way tiered pricing
     if (distance <= 20) {
       return (20 * rates.dropTripRate).toFixed(2);
-    } else if (distance <= 135) {
-      return (135 * rates.dropTripRate).toFixed(2);
+    } else if (distance <= 130) {
+      return (130 * rates.dropTripRate).toFixed(2);
     } else {
       return (distance * rates.dropTripRate).toFixed(2);
     }
@@ -49,8 +49,8 @@ const EnhancedFareCalculator: React.FC<EnhancedFareCalculatorProps> = ({
     
     if (distance <= 20) {
       return `Distance (${distance} km, min 20 km)`;
-    } else if (distance <= 135) {
-      return `Distance (${distance} km, charged 135 km)`;
+    } else if (distance <= 130) {
+      return `Distance (${distance} km, charged 130 km)`;
     } else {
       return `Distance (${distance} km)`;
     }

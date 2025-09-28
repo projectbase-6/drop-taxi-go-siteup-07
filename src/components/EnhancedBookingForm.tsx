@@ -479,17 +479,12 @@ const EnhancedBookingForm = () => {
                 {/* Departure Time */}
                 <div className="space-y-2">
                   <Label className="text-gray-700 font-semibold text-base">Departure Time</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !pickupTime && "text-muted-foreground hover:text-black")}>
-                        <Clock className="mr-3 h-5 w-5 text-primary" />
-                        {pickupTime || <span>Select time</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-4" align="start">
-                      <CustomTimePicker value={pickupTime} onChange={setPickupTime} placeholder="Select time" className="w-full" />
-                    </PopoverContent>
-                  </Popover>
+                  <CustomTimePicker 
+                    value={pickupTime} 
+                    onChange={setPickupTime} 
+                    placeholder="Select time" 
+                    className="w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black"
+                  />
                 </div>
 
                 {/* Return Date */}
@@ -518,17 +513,12 @@ const EnhancedBookingForm = () => {
                 {/* Return Time */}
                 <div className="space-y-2">
                   <Label className="text-gray-700 font-semibold text-base">Return Time</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !returnTime && "text-muted-foreground hover:text-black")}>
-                        <Clock className="mr-3 h-5 w-5 text-primary" />
-                        {returnTime || <span>Return time</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-4" align="start">
-                      <CustomTimePicker value={returnTime} onChange={setReturnTime} placeholder="Select return time" className="w-full" />
-                    </PopoverContent>
-                  </Popover>
+                  <CustomTimePicker 
+                    value={returnTime} 
+                    onChange={setReturnTime} 
+                    placeholder="Select return time" 
+                    className="w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black"
+                  />
                 </div>
               </div>
 
@@ -605,17 +595,12 @@ const EnhancedBookingForm = () => {
                 {/* Time */}
                 <div className="space-y-2">
                   <Label className="text-gray-700 font-semibold text-base">Start Time</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !pickupTime && "text-muted-foreground hover:text-black")}>
-                        <Clock className="mr-3 h-5 w-5 text-primary" />
-                        {pickupTime || <span>Select time</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-4" align="start">
-                      <CustomTimePicker value={pickupTime} onChange={setPickupTime} placeholder="Select start time" className="w-full" />
-                    </PopoverContent>
-                  </Popover>
+                  <CustomTimePicker 
+                    value={pickupTime} 
+                    onChange={setPickupTime} 
+                    placeholder="Select start time" 
+                    className="w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black"
+                  />
                 </div>
               </div>
             </TabsContent>
