@@ -11,7 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { MapPin, Calculator, CalendarIcon, Clock } from 'lucide-react';
+import { MapPin, Calculator, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { format, addMinutes, parse } from 'date-fns';
 import { cn } from '@/lib/utils';
 import LocationAutocomplete from './LocationAutocomplete';
@@ -479,12 +479,17 @@ const EnhancedBookingForm = () => {
                 {/* Departure Time */}
                 <div className="space-y-2">
                   <Label className="text-gray-700 font-semibold text-base">Departure Time</Label>
-                  <CustomTimePicker 
-                    value={pickupTime} 
-                    onChange={setPickupTime} 
-                    placeholder="Select time" 
-                    className="w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black"
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !pickupTime && "text-muted-foreground hover:text-black")}>
+                        <Clock className="mr-3 h-5 w-5 text-primary" />
+                        {pickupTime || <span>Select time</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-4" align="start">
+                      <CustomTimePicker value={pickupTime} onChange={setPickupTime} placeholder="Select time" className="w-full" />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 {/* Return Date */}
@@ -595,12 +600,17 @@ const EnhancedBookingForm = () => {
                 {/* Time */}
                 <div className="space-y-2">
                   <Label className="text-gray-700 font-semibold text-base">Start Time</Label>
-                  <CustomTimePicker 
-                    value={pickupTime} 
-                    onChange={setPickupTime} 
-                    placeholder="Select start time" 
-                    className="w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black"
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className={cn("w-full h-10 justify-start text-left font-normal border-2 border-gray-200 focus:border-primary rounded-xl hover:border-primary hover:bg-white hover:text-black", !pickupTime && "text-muted-foreground hover:text-black")}>
+                        <Clock className="mr-3 h-5 w-5 text-primary" />
+                        {pickupTime || <span>Select time</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-4" align="start">
+                      <CustomTimePicker value={pickupTime} onChange={setPickupTime} placeholder="Select start time" className="w-full" />
+                    </PopoverContent>
+                  </Popover>
                 </div>
               </div>
             </TabsContent>

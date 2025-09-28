@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowUpDown, MapPin, Calculator, CalendarIcon, Clock } from 'lucide-react';
+import { ArrowUpDown, MapPin, Calculator, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { format, addMinutes, parse } from 'date-fns';
 import { cn } from '@/lib/utils';
 import LocationAutocomplete from './LocationAutocomplete';
