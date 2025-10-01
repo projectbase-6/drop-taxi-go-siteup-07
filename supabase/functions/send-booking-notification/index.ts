@@ -1,6 +1,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { Resend } from "npm:resend@2.0.0";
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -234,7 +235,18 @@ const sendEmailNotification = async (resendApiKey: string, adminEmail: string, b
       if (booking.duration_hours && booking.duration_minutes) {
         return `${booking.duration_hours} hour ${booking.duration_minutes} mins (Approx)`;
       }
-      return 'TBD';
+      if (booking.duration_minutes) {
+        const hours = Math.floor(booking.duration_minutes / 60);
+        const minutes = booking.duration_minutes % 60;
+        if (hours > 0 && minutes > 0) {
+          return `${hours} hours ${minutes} mins (Approx)`;
+        } else if (hours > 0) {
+          return `${hours} hours (Approx)`;
+        } else {
+          return `${minutes} mins (Approx)`;
+        }
+      }
+      return 'Duration TBD';
     };
 
     const formatDate = (dateString: string) => {
@@ -471,6 +483,32 @@ serve(async (req) => {
   try {
     const booking: BookingData = await req.json();
     console.log('Processing booking notification for:', booking.id);
+    
+    // Initialize Supabase client to fetch vehicle rates
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') || 'https://skjsaxpsgepdtkykyoni.supabase.co';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SUPABASE_ANON_KEY');
+    
+    let vehicleRate = 19; // Default fallback rate
+    
+    if (supabaseKey) {
+      try {
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        const { data: vehicleType, error } = await supabase
+          .from('vehicle_types')
+          .select('drop_trip_rate_per_km')
+          .ilike('name', booking.vehicle_type)
+          .single();
+        
+        if (!error && vehicleType?.drop_trip_rate_per_km) {
+          vehicleRate = vehicleType.drop_trip_rate_per_km;
+          console.log(`Found vehicle rate for ${booking.vehicle_type}: ₹${vehicleRate}/km`);
+        } else {
+          console.log(`Vehicle type ${booking.vehicle_type} not found, using default rate: ₹${vehicleRate}/km`);
+        }
+      } catch (error) {
+        console.error('Error fetching vehicle rate:', error);
+      }
+    }
     
     // Get environment variables with the updated credentials
     const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN');

@@ -30,8 +30,8 @@ export const useFareCalculation = () => {
       actualDays = calculateDaysBetween(departureDate, returnDate);
     }
     
-    // Driver batta calculation based on actual days
-    const driverBatta = 400 * actualDays;
+    // Driver batta calculation based on actual days (updated to 500)
+    const driverBatta = 500 * actualDays;
     
     // Implement tiered pricing model
     const vehicleType = vehicleTypeName ? 
@@ -48,12 +48,12 @@ export const useFareCalculation = () => {
       
       // For one-way trips, implement tiered pricing:
       // ≤20km: Use minimum fare
-      // 21-130km: Charge for 130km
+      // 21-130km: Charge for 130km (updated from 135km)
       // >130km: Charge actual distance
       
       if (distance <= 20) {
         // Use minimum fare for distances ≤20km
-        return Math.round((vehicleType.min_20km_fare || 680) + (actualDays > 1 ? (actualDays - 1) * 400 : 0));
+        return Math.round((vehicleType.min_20km_fare || 680) + (actualDays > 1 ? (actualDays - 1) * 500 : 0));
       } else if (distance <= 130) {
         // Charge for 130km for distances 21-130km
         const perKmRate = vehicleType.drop_trip_rate_per_km || 14;

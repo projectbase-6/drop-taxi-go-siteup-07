@@ -164,7 +164,8 @@ const MobileBookingForm = () => {
     
     // For single day trips, show hours and minutes
     if (distanceResult.duration > 0) {
-      return calculateDuration(undefined, undefined, distanceResult.duration);
+      const duration = calculateDuration(undefined, undefined, distanceResult.duration);
+      return duration;
     }
     
     return 'Calculating...';

@@ -107,29 +107,8 @@ const EnhancedBookingForm = () => {
       );
     }
     
-    // For single day trips, use the original logic
-    if (durationInMinutes <= 0) return '-';
-    const totalHours = Math.floor(durationInMinutes / 60);
-    const minutes = Math.round(durationInMinutes % 60);
-    if (totalHours >= 24) {
-      const days = Math.floor(totalHours / 24);
-      const remainingHours = totalHours % 24;
-      if (remainingHours === 0 && minutes === 0) {
-        return `${days}d`;
-      } else if (remainingHours === 0) {
-        return `${days}d ${minutes}m`;
-      } else if (minutes === 0) {
-        return `${days}d ${remainingHours}h`;
-      } else {
-        return `${days}d ${remainingHours}h ${minutes}m`;
-      }
-    } else if (totalHours === 0) {
-      return `${minutes}m`;
-    } else if (minutes === 0) {
-      return `${totalHours}h`;
-    } else {
-      return `${totalHours}h ${minutes}m`;
-    }
+    // For single day trips, use the calculateDuration function for consistency
+    return calculateDuration(undefined, undefined, durationInMinutes);
   };
 
   // Form validation
