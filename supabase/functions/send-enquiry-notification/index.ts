@@ -62,6 +62,19 @@ const handler = async (req: Request): Promise<Response> => {
 
     const badgeColor = getSubjectBadgeColor(enquiry.subject);
     
+    // Helper function to format duration from minutes to hours and minutes
+    const formatDurationFromMinutes = (minutes: number) => {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      if (hours > 0 && remainingMinutes > 0) {
+        return `${hours} hours ${remainingMinutes} mins`;
+      } else if (hours > 0) {
+        return `${hours} hours`;
+      } else {
+        return `${remainingMinutes} mins`;
+      }
+    };
+    
     // Generate vehicle search details section if applicable
     const vehicleSearchDetails = enquiry.enquiryType === 'vehicle-search' ? `
       <div style="background-color: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 20px; margin-bottom: 20px;">
@@ -102,19 +115,6 @@ const handler = async (req: Request): Promise<Response> => {
         </table>
       </div>
     ` : '';
-
-    // Helper function to format duration from minutes to hours and minutes
-    const formatDurationFromMinutes = (minutes: number) => {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      if (hours > 0 && remainingMinutes > 0) {
-        return `${hours} hours ${remainingMinutes} mins`;
-      } else if (hours > 0) {
-        return `${hours} hours`;
-      } else {
-        return `${remainingMinutes} mins`;
-      }
-    };
 
     // HTML template for admin email
     const adminHtml = `

@@ -223,10 +223,11 @@ const sendSMSMessage = async (accountSid: string, authToken: string, fromNumber:
   }
 };
 
-const sendEmailNotification = async (resendApiKey: string, adminEmail: string, booking: BookingData) => {
+const sendEmailNotification = async (resendApiKey: string, adminEmail: string, booking: BookingData, vehicleRate: number) => {
   console.log('Attempting to send admin email notification...');
   console.log('Admin Email:', adminEmail);
   console.log('Passenger Email:', booking.passenger_email);
+  console.log('Vehicle Rate:', vehicleRate);
   
   try {
     const resend = new Resend(resendApiKey);
@@ -678,7 +679,7 @@ For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.i
     if (RESEND_API_KEY && ADMIN_EMAIL) {
       console.log('Resend credentials found, proceeding with email notification...');
       console.log(`Sending admin email notification to: ${ADMIN_EMAIL}`);
-      results.email_admin = await sendEmailNotification(RESEND_API_KEY, ADMIN_EMAIL, booking);
+      results.email_admin = await sendEmailNotification(RESEND_API_KEY, ADMIN_EMAIL, booking, vehicleRate);
       console.log('Admin email result:', results.email_admin);
     } else {
       console.log('Email credentials not fully configured:', {
