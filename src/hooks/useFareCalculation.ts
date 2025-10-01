@@ -18,7 +18,7 @@ export const useFareCalculation = () => {
   const calculateFare = (
     distance: number, 
     duration: number = 0, 
-    tripType: 'oneway' | 'roundtrip' = 'oneway',
+    tripType: 'oneway' | 'roundtrip' | 'hourly' = 'oneway',
     vehicleTypeName?: string,
     numberOfDays: number = 1,
     departureDate?: string,

@@ -331,11 +331,11 @@ const sendEmailNotification = async (resendApiKey: string, adminEmail: string, b
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #475569;">Extra Per KM:</td>
-                  <td style="padding: 8px 0; color: #1e293b;">₹ 19.00</td>
+                  <td style="padding: 8px 0; color: #1e293b;">₹ ${vehicleRate}.00</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #475569;">Driver Batta:</td>
-                  <td style="padding: 8px 0; color: #1e293b;">₹ 400 (included)</td>
+                  <td style="padding: 8px 0; color: #1e293b;">₹ 500 (included)</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #475569;">Above 400 KM:</td>

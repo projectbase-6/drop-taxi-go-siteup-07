@@ -7,7 +7,7 @@ import { useFareCalculation } from '@/hooks/useFareCalculation';
 interface VehicleSelectionProps {
   distance: number;
   duration?: number;
-  tripType?: 'oneway' | 'roundtrip';
+  tripType?: 'oneway' | 'roundtrip' | 'hourly';
   onVehicleSelect: (vehicle: any, fare: number) => void;
   selectedVehicleId?: string;
   isCalculatingDistance?: boolean;
