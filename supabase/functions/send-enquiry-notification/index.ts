@@ -96,12 +96,25 @@ const handler = async (req: Request): Promise<Response> => {
           ${enquiry.duration ? `
           <tr>
             <td style="padding: 5px 0; color: #16a34a;">Est. Duration:</td>
-            <td style="padding: 5px 0; color: #166534; font-weight: 600;">${Math.round(enquiry.duration)} min</td>
+            <td style="padding: 5px 0; color: #166534; font-weight: 600;">${formatDurationFromMinutes(enquiry.duration)}</td>
           </tr>
           ` : ''}
         </table>
       </div>
     ` : '';
+
+    // Helper function to format duration from minutes to hours and minutes
+    const formatDurationFromMinutes = (minutes: number) => {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      if (hours > 0 && remainingMinutes > 0) {
+        return `${hours} hours ${remainingMinutes} mins`;
+      } else if (hours > 0) {
+        return `${hours} hours`;
+      } else {
+        return `${remainingMinutes} mins`;
+      }
+    };
 
     // HTML template for admin email
     const adminHtml = `

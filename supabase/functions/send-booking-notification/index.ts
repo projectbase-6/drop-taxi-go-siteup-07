@@ -576,6 +576,9 @@ For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.i
 
 ✅ *Action Required:* Please assign driver and confirm booking.
 
+📊 *Rate Info:* ₹${vehicleRate}/km for ${booking.vehicle_type.toUpperCase()}
+👨‍✈️ *Driver Batta:* ₹500/day included
+
 Thank you for choosing droptaxigo
 For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.in
     `.trim();
