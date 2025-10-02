@@ -223,6 +223,13 @@ const sendSMSMessage = async (accountSid: string, authToken: string, fromNumber:
   }
 };
 
+// Helper function to calculate driver batta based on trip type
+const calculateDriverBatta = (tripType: string): number => {
+  // One-way trips: ₹400 per day
+  // Round-trip and hourly trips: ₹500 per day
+  return tripType === 'oneway' ? 400 : 500;
+};
+
 const sendEmailNotification = async (resendApiKey: string, adminEmail: string, booking: BookingData, vehicleRate: number) => {
   console.log('Attempting to send admin email notification...');
   console.log('Admin Email:', adminEmail);
@@ -336,7 +343,7 @@ const sendEmailNotification = async (resendApiKey: string, adminEmail: string, b
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #475569;">Driver Batta:</td>
-                  <td style="padding: 8px 0; color: #1e293b;">₹ 500 (included)</td>
+                  <td style="padding: 8px 0; color: #1e293b;">₹ ${calculateDriverBatta(booking.trip_type)} (included)</td>
                 </tr>
                 <tr>
                   <td style="padding: 8px 0; font-weight: bold; color: #475569;">Above 400 KM:</td>
@@ -578,7 +585,7 @@ For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.i
 ✅ *Action Required:* Please assign driver and confirm booking.
 
 📊 *Rate Info:* ₹${vehicleRate}/km for ${booking.vehicle_type.toUpperCase()}
-👨‍✈️ *Driver Batta:* ₹500/day included
+👨‍✈️ *Driver Batta:* ₹${calculateDriverBatta(booking.trip_type)}/day included
 
 Thank you for choosing droptaxigo
 For Questions Contact: 7305305111 or visit our site droptaxigo.com/ droptaxigo.in
