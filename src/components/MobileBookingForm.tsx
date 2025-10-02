@@ -212,49 +212,6 @@ const MobileBookingForm = () => {
       toast.error('Please fill in all required fields');
       return;
     }
-    
-    // Send vehicle search enquiry notification
-    try {
-      const enquiryData = {
-        enquiryId: crypto.randomUUID(),
-        fullName: passengerName || 'Guest User',
-        email: passengerEmail || 'noreply@droptaxigo.in',
-        phone: passengerPhone || '',
-        subject: 'Vehicle Search Enquiry',
-        message: `Customer is searching for vehicles for a ${activeTab} trip`,
-        createdAt: new Date().toISOString(),
-        enquiryType: 'vehicle-search',
-        pickupLocation: fromLocation,
-        dropLocation: toLocation,
-        pickupDate: departureDate ? format(departureDate, 'yyyy-MM-dd') : '',
-        pickupTime: pickupTime,
-        tripType: activeTab,
-        distance: estimatedDistance,
-        duration: distanceResult.duration
-      };
-
-      console.log('Sending vehicle search enquiry:', enquiryData);
-      
-      fetch('https://skjsaxpsgepdtkykyoni.supabase.co/functions/v1/send-enquiry-notification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNranNheHBzZ2VwZHRreWt5b25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNDg4MTQsImV4cCI6MjA2NzgyNDgxNH0.b0Mfizp4b0l-U75RBGzYWsWRSoevd3LRe2yMlJO3zao`
-        },
-        body: JSON.stringify(enquiryData)
-      }).then(response => {
-        if (!response.ok) {
-          console.error('Failed to send vehicle search enquiry');
-        } else {
-          console.log('Vehicle search enquiry sent successfully');
-        }
-      }).catch(error => {
-        console.error('Error sending vehicle search enquiry:', error);
-      });
-    } catch (error) {
-      console.error('Error preparing vehicle search enquiry:', error);
-    }
-    
     setShowVehicleSelection(true);
   };
   const handleVehicleSelect = async (vehicle: any, fare: number) => {
@@ -268,7 +225,7 @@ const MobileBookingForm = () => {
         fullName: passengerName || 'Guest User',
         email: passengerEmail || 'noreply@droptaxigo.in',
         phone: passengerPhone || '',
-        subject: 'Vehicle Selected - Booking Enquiry',
+        subject: 'New Booking Enquiry',
         message: `Customer selected ${vehicle.name} for a ${activeTab} trip`,
         createdAt: new Date().toISOString(),
         enquiryType: 'vehicle-search',
