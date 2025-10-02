@@ -227,7 +227,7 @@ const sendSMSMessage = async (accountSid: string, authToken: string, fromNumber:
 const calculateDriverBatta = (tripType: string): number => {
   // One-way trips: ₹400 per day
   // Round-trip and hourly trips: ₹500 per day
-  return tripType === 'oneway' ? 400 : 500;
+  return (tripType === 'oneway' || tripType === 'one-way') ? 400 : 500;
 };
 
 const sendEmailNotification = async (resendApiKey: string, adminEmail: string, booking: BookingData, vehicleRate: number) => {

@@ -672,7 +672,7 @@ const EnhancedBookingForm = () => {
               <div className="space-y-4 mt-4">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <div className="text-sm text-gray-700 space-y-2">
-                    <p><strong>Driver Batta:</strong> ₹ 500 (included)</p>
+                    <p><strong>Driver Batta:</strong> ₹ {activeTab === 'oneway' ? '400' : '500'} (included)</p>
                     <p><strong>Above 400 KM:</strong> ₹ 300 Extra</p>
                     <p><strong>For Customer Intimation:</strong> Toll Gate, Permit, Hill Station Charges Extra</p>
                     <p><strong>For Questions Contact:</strong> 7305305111</p>
