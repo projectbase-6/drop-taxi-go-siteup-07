@@ -30,8 +30,10 @@ export const useFareCalculation = () => {
       actualDays = calculateDaysBetween(departureDate, returnDate);
     }
     
-    // Driver batta calculation based on actual days (updated to 500)
-    const driverBatta = 500 * actualDays;
+    // Driver batta calculation based on trip type and actual days
+    // One-way trips: ₹400 per day
+    // Round-trip and hourly trips: ₹500 per day
+    const driverBatta = (tripType === 'oneway' ? 400 : 500) * actualDays;
     
     // Implement tiered pricing model
     const vehicleType = vehicleTypeName ? 
