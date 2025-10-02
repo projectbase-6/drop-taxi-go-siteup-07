@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { CheckCircle, Car, MapPin, Clock, Phone, MessageCircle, ArrowLeft } from 'lucide-react';
 import { useDistanceCalculation } from '@/hooks/useDistanceCalculation';
 import { useFareCalculation } from '@/hooks/useFareCalculation';
+import { useVehicleTypes } from '@/hooks/useVehicleTypes';
 
 const BookingConfirmation: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -16,6 +17,7 @@ const BookingConfirmation: React.FC = () => {
   const [introAnimating, setIntroAnimating] = useState(false);
   const [highlightReceipt, setHighlightReceipt] = useState(false);
   const { calculateDuration, calculateDaysBetween } = useFareCalculation();
+  const { data: vehicleTypes } = useVehicleTypes();
 
   // Extract booking details from URL parameters
   const bookingDetails = {
@@ -111,16 +113,35 @@ const BookingConfirmation: React.FC = () => {
         return bookingDetails.trip_type;
       };
 
-      // Calculate driver batta for multi-day trips
+      // Calculate driver batta based on trip type
       const calculateDriverBatta = () => {
-        if (bookingDetails.return_date && (bookingDetails.trip_type === 'round-trip' || bookingDetails.trip_type === 'hourly')) {
+        const baseRate = (bookingDetails.trip_type === 'one-way' || bookingDetails.trip_type === 'oneway') ? 400 : 500;
+        
+        if (bookingDetails.return_date && (bookingDetails.trip_type === 'round-trip' || bookingDetails.trip_type === 'roundtrip' || bookingDetails.trip_type === 'hourly')) {
           const days = calculateDaysBetween(bookingDetails.pickup_date, bookingDetails.return_date);
-          return 500 * days;
+          return baseRate * days;
         }
-        return 500;
+        return baseRate;
+      };
+
+      // Get the correct per-km rate based on vehicle type and trip type
+      const getPerKmRate = () => {
+        const vehicle = vehicleTypes?.find(
+          v => v.name.toLowerCase() === bookingDetails.vehicle_type.toLowerCase()
+        );
+        
+        if (vehicle) {
+          // For round trips, use round_trip_rate_per_km, otherwise use drop_trip_rate_per_km
+          if (bookingDetails.trip_type === 'round-trip' || bookingDetails.trip_type === 'roundtrip') {
+            return vehicle.round_trip_rate_per_km || 12;
+          }
+          return vehicle.drop_trip_rate_per_km || 14;
+        }
+        return 14; // Default fallback
       };
 
       const driverBatta = calculateDriverBatta();
+      const perKmRate = getPerKmRate();
       const receiptMessage = `🚖 *NEW BOOKING - RECEIPT REQUEST*
 
 📋 *BOOKING DETAILS*
@@ -147,7 +168,7 @@ const BookingConfirmation: React.FC = () => {
 ━━━━━━━━━━━━━━━━━━━━━
 📏 *Trip Distance:* ${bookingDetails.distance_km || 'TBD'} KM
 💵 *Trip Estimation:* ₹${bookingDetails.estimated_fare}.00
-📊 *Extra Per KM:* ₹19.00
+📊 *Extra Per KM:* ₹${perKmRate.toFixed(2)}
 👨‍✈️ *Driver Batta:* ₹${driverBatta} (included)
 🔺 *Above 400 KM:* ₹300 Extra
 
