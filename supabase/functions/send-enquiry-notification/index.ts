@@ -26,6 +26,8 @@ interface EnquiryNotificationRequest {
   tripType?: string;
   distance?: number;
   duration?: number;
+  vehicleType?: string;
+  estimatedFare?: number;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -104,6 +106,18 @@ const handler = async (req: Request): Promise<Response> => {
           <tr>
             <td style="padding: 5px 0; color: #16a34a;">Distance:</td>
             <td style="padding: 5px 0; color: #166534; font-weight: 600;">${enquiry.distance} km</td>
+          </tr>
+          ` : ''}
+          ${enquiry.vehicleType ? `
+          <tr>
+            <td style="padding: 5px 0; color: #16a34a;">Vehicle Type:</td>
+            <td style="padding: 5px 0; color: #166534; font-weight: 600;">${enquiry.vehicleType}</td>
+          </tr>
+          ` : ''}
+          ${enquiry.estimatedFare ? `
+          <tr>
+            <td style="padding: 5px 0; color: #16a34a;">Amount:</td>
+            <td style="padding: 5px 0; color: #166534; font-weight: 600;">₹${enquiry.estimatedFare.toFixed(2)}</td>
           </tr>
           ` : ''}
           ${enquiry.duration ? `

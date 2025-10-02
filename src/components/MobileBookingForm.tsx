@@ -257,9 +257,45 @@ const MobileBookingForm = () => {
     
     setShowVehicleSelection(true);
   };
-  const handleVehicleSelect = (vehicle: any, fare: number) => {
+  const handleVehicleSelect = async (vehicle: any, fare: number) => {
     setSelectedVehicle(vehicle);
     setEstimatedFare(fare);
+
+    // Send updated enquiry with vehicle details
+    try {
+      const enquiryData = {
+        enquiryId: crypto.randomUUID(),
+        fullName: passengerName || 'Guest User',
+        email: passengerEmail || 'noreply@droptaxigo.in',
+        phone: passengerPhone || '',
+        subject: 'Vehicle Selected - Booking Enquiry',
+        message: `Customer selected ${vehicle.name} for a ${activeTab} trip`,
+        createdAt: new Date().toISOString(),
+        enquiryType: 'vehicle-search',
+        pickupLocation: fromLocation,
+        dropLocation: toLocation,
+        pickupDate: departureDate ? format(departureDate, 'yyyy-MM-dd') : '',
+        pickupTime: pickupTime,
+        tripType: activeTab,
+        distance: estimatedDistance,
+        duration: distanceResult.duration,
+        vehicleType: vehicle.name,
+        estimatedFare: fare
+      };
+
+      fetch('https://skjsaxpsgepdtkykyoni.supabase.co/functions/v1/send-enquiry-notification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNranNheHBzZ2VwZHRreWt5b25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyNDg4MTQsImV4cCI6MjA2NzgyNDgxNH0.b0Mfizp4b0l-U75RBGzYWsWRSoevd3LRe2yMlJO3zao`
+        },
+        body: JSON.stringify(enquiryData)
+      }).catch(error => {
+        console.error('Error sending vehicle selection enquiry:', error);
+      });
+    } catch (error) {
+      console.error('Error preparing vehicle selection enquiry:', error);
+    }
   };
   const handleBooking = async () => {
     if (!selectedVehicle) {
